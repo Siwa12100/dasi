@@ -5,7 +5,10 @@
 package td1.jeanico.patiment.metier.modele;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
@@ -16,6 +19,7 @@ import javax.persistence.Id;
 @Entity
 public class Client implements Serializable {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     protected Long ID;
     protected String nom;
     protected String prenom;
@@ -76,5 +80,27 @@ public class Client implements Serializable {
     @Override
     public String toString() {
         return "Client{" + "id=" + ID + ", nom=" + nom + ", prenom=" + prenom + ", mail=" + mail + ", motDePasse=" + motDePasse + '}';
+    }
+    
+        @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.ID);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Client other = (Client) obj;
+        return Objects.equals(this.ID, other.ID);
     }
 }
