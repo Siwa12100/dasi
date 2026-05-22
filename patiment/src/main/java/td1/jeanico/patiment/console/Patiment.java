@@ -2,7 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 
-package td1.jeanico.patiment;
+package td1.jeanico.patiment.console;
+
+import td1.jeanico.patiment.metier.modele.Client;
 
 /**
  *

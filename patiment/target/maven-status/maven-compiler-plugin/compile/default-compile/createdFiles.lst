@@ -1,2 +1,2 @@
-td1\jeanico\patiment\Patiment.class
-td1\jeanico\patiment\Client.class
+td1\jeanico\patiment\metier\modele\Client.class
+td1\jeanico\patiment\console\Patiment.class

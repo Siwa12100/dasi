@@ -2,25 +2,32 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package td1.jeanico.patiment;
+package td1.jeanico.patiment.metier.modele;
+
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 /**
  *
- * @author ncolomb
+ * @author ncolomb + jmarcillac
  */
-public class Client {
-    protected Long id;
+
+@Entity
+public class Client implements Serializable {
+    @Id
+    protected Long ID;
     protected String nom;
     protected String prenom;
     protected String mail;
     protected String motDePasse;
 
     public Long getId() {
-        return id;
+        return ID;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.ID = id;
     }
 
     public String getNom() {
@@ -68,6 +75,6 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Client{" + "id=" + id + ", nom=" + nom + ", prenom=" + prenom + ", mail=" + mail + ", motDePasse=" + motDePasse + '}';
+        return "Client{" + "id=" + ID + ", nom=" + nom + ", prenom=" + prenom + ", mail=" + mail + ", motDePasse=" + motDePasse + '}';
     }
 }
