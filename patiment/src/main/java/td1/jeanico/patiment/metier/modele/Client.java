@@ -4,12 +4,12 @@
  */
 package td1.jeanico.patiment.metier.modele;
 
-import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 /**
  *
@@ -17,22 +17,27 @@ import javax.persistence.Id;
  */
 
 @Entity
-public class Client implements Serializable {
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    protected Long ID;
+public class Client extends Utilisateur {
+
     protected String nom;
-    protected String prenom;
-    protected String mail;
-    protected String motDePasse;
 
-    public Long getId() {
-        return ID;
-    }
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "numeroDeVoie", column = @Column(name = "adresse_numero_de_voie", nullable = false)),
+        @AttributeOverride(name = "nomDeVoie", column = @Column(name = "adresse_nom_de_voie", nullable = false)),
+        @AttributeOverride(name = "codePostal", column = @Column(name = "adresse_code_postal", nullable = false)),
+        @AttributeOverride(name = "codeDepartement", column = @Column(name = "adresse_code_departement", nullable = false))
+    })
+    private Adresse adresse;
 
-    public void setId(Long id) {
-        this.ID = id;
-    }
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "animalTotal", column = @Column(name = "profil_animal_total")),
+        @AttributeOverride(name = "signeZodiac", column = @Column(name = "profil_signe_zodiac")),
+        @AttributeOverride(name = "couleurBonheur", column = @Column(name = "profil_couleur_bonheur")),
+        @AttributeOverride(name = "signeChinois", column = @Column(name = "profil_signe_chinois"))
+    })
+    private ProfilAstral profilAstral;
 
     public String getNom() {
         return nom;
@@ -42,44 +47,39 @@ public class Client implements Serializable {
         this.nom = nom;
     }
 
-    public String getPrenom() {
-        return prenom;
+    public Adresse getAdresse() {
+        return adresse;
     }
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
+    public void setAdresse(Adresse adresse) {
+        this.adresse = adresse;
     }
 
-    public String getMail() {
-        return mail;
+    public ProfilAstral getProfilAstral() {
+        return profilAstral;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public String getMotDePasse() {
-        return motDePasse;
-    }
-
-    public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
+    public void setProfilAstral(ProfilAstral profilAstral) {
+        this.profilAstral = profilAstral;
     }
     
     public Client() {
     }
     
     public Client(String nom, String prenom, String mail, String motDePasse) {
-        // TODO: Générer l'id
+        super(mail, prenom, motDePasse, null);
         this.nom = nom;
-        this.prenom = prenom;
-        this.mail = mail;
-        this.motDePasse = motDePasse;
+    }
+
+    public Client(String nom, String prenom, String mail, String motDePasse, String telephone, Adresse adresse) {
+        super(mail, prenom, motDePasse, telephone);
+        this.nom = nom;
+        this.adresse = adresse;
     }
 
     @Override
     public String toString() {
-        return "Client{" + "id=" + ID + ", nom=" + nom + ", prenom=" + prenom + ", mail=" + mail + ", motDePasse=" + motDePasse + '}';
+        return "Client{" + "id=" + ID + ", nom=" + nom + ", prenom=" + prenom + ", mail=" + mail + ", telephone=" + telephone + ", adresse=" + adresse + ", profilAstral=" + profilAstral + '}';
     }
     
         @Override

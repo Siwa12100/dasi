@@ -6,11 +6,13 @@ services:
     working_dir: /workspaces/patiment/patiment
     command: sleep infinity
     environment:
-      DB_HOST: dasi-mariadb
-      DB_PORT: "3306"
+      DB_HOST: host.docker.internal
+      DB_PORT: "3307"
       DB_NAME: DASI-DB
       DB_USER: dasi
       DB_PASSWORD: dasi
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       dasi-mariadb:
         condition: service_healthy
@@ -24,7 +26,7 @@ services:
       MARIADB_USER: dasi
       MARIADB_PASSWORD: dasi
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - dasi-mariadb-data:/var/lib/mysql
     healthcheck:

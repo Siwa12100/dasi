@@ -13,9 +13,26 @@ import td1.jeanico.patiment.metier.modele.Client;
  * @author ncolomb
  */
 public class ClientDao {
+
     public void create(Client cl) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         em.persist(cl);
+    }
+
+    public Client update(Client cl) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        return em.merge(cl);
+    }
+
+    public void delete(Client cl) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        Client managedClient = em.contains(cl) ? cl : em.merge(cl);
+        em.remove(managedClient);
+    }
+
+    public Client findById(Long id) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        return em.find(Client.class, id);
     }
 
     public List<Client> findAllOrderedByNomPrenom() {
