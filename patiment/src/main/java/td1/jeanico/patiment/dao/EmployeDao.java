@@ -34,4 +34,12 @@ public class EmployeDao {
                 Employe.class
         ).getResultList();
     }
+
+    public List<Employe> findAllDisponiblesOrderedByPrenom() {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        return em.createQuery(
+                "SELECT e FROM Employe e WHERE e.estDisponible = TRUE ORDER BY e.prenom ASC",
+                Employe.class
+        ).getResultList();
+    }
 }

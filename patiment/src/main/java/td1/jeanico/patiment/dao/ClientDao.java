@@ -35,6 +35,29 @@ public class ClientDao {
         return em.find(Client.class, id);
     }
 
+    public Client findByMail(String mail) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        List<Client> resultats = em.createQuery(
+                "SELECT c FROM Client c WHERE LOWER(c.mail) = LOWER(:mail)",
+                Client.class
+        ).setParameter("mail", mail)
+                .setMaxResults(1)
+                .getResultList();
+        return resultats.isEmpty() ? null : resultats.get(0);
+    }
+
+    public Client findByMailAndMotDePasse(String mail, String motDePasse) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        List<Client> resultats = em.createQuery(
+                "SELECT c FROM Client c WHERE LOWER(c.mail) = LOWER(:mail) AND c.motDePasse = :motDePasse",
+                Client.class
+        ).setParameter("mail", mail)
+                .setParameter("motDePasse", motDePasse)
+                .setMaxResults(1)
+                .getResultList();
+        return resultats.isEmpty() ? null : resultats.get(0);
+    }
+
     public List<Client> findAllOrderedByNomPrenom() {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.createQuery(
@@ -42,5 +65,4 @@ public class ClientDao {
                 Client.class
         ).getResultList();
     }
-    
 }

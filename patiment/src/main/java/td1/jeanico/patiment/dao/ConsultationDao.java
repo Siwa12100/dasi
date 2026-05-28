@@ -54,4 +54,13 @@ public class ConsultationDao {
         ).setParameter("employe", employe)
                 .getResultList();
     }
+
+    public List<Consultation> findEnCoursByEmploye(Employe employe) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        return em.createQuery(
+                "SELECT c FROM Consultation c WHERE c.employe = :employe AND c.estTermine = FALSE ORDER BY c.date DESC",
+                Consultation.class
+        ).setParameter("employe", employe)
+                .getResultList();
+    }
 }
