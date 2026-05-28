@@ -1,43 +1,55 @@
-package td1.jeanico.patiment.metier.service;
+package td1.jeanico.patiment.metier.service.client;
 
 import java.util.List;
 import td1.jeanico.patiment.dao.ClientDao;
 import td1.jeanico.patiment.dao.ConsultationDao;
 import td1.jeanico.patiment.metier.modele.Client;
+import td1.jeanico.patiment.metier.modele.Consultation;
 import td1.jeanico.patiment.metier.modele.ProfilAstral;
+import td1.jeanico.patiment.metier.service.support.IfAstroNetMapper;
+import td1.jeanico.patiment.metier.service.support.PersistenceSupport;
 import td1.jeanico.patiment.util.Message;
+import td1.jeanico.patiment.webclient.IfAstroNetWebClient;
+import jakarta.json.JsonObject;
 
-public class ClientService extends PersistenceSupport {
+public class ClientService extends PersistenceSupport implements IClientService {
 
     private final ClientDao clientDao;
     private final ConsultationDao consultationDao;
-    private final AstroGateway astroGateway;
+    private final IfAstroNetWebClient astroNetWebClient;
 
     public ClientService() {
-        this(new ClientDao(), new ConsultationDao(), new AstroGateway());
+        this(new ClientDao(), new ConsultationDao(), new IfAstroNetWebClient());
     }
 
-    public ClientService(ClientDao clientDao, ConsultationDao consultationDao, AstroGateway astroGateway) {
+    public ClientService(ClientDao clientDao, ConsultationDao consultationDao, IfAstroNetWebClient astroNetWebClient) {
         this.clientDao = clientDao;
         this.consultationDao = consultationDao;
-        this.astroGateway = astroGateway;
+        this.astroNetWebClient = astroNetWebClient;
     }
-    
+
+    @Override
     public boolean inscrire(Client client) {
         if (client == null || isBlank(client.getMail()) || isBlank(client.getMotDePasse())) {
             return false;
         }
 
-        boolean inscriptionReussie = executeInTransaction(() -> {
-            if (clientDao.findByMail(client.getMail()) != null) {
-                return false;
-            }
-            if (client.getProfilAstral() == null) {
-                client.setProfilAstral(astroGateway.construireProfilAstral(client));
-            }
-            clientDao.create(client);
-            return true;
-        });
+        boolean inscriptionReussie;
+        try {
+            inscriptionReussie = executeInTransaction(() -> {
+                if (clientDao.findByMail(client.getMail()) != null) {
+                    return false;
+                }
+                if (client.getProfilAstral() == null) {
+                    JsonObject jsonProfil = astroNetWebClient.recupererProfilAstral(client.getPrenom(), null);
+                    client.setProfilAstral(IfAstroNetMapper.versProfilAstral(jsonProfil));
+                }
+                clientDao.create(client);
+                return true;
+            });
+        } catch (RuntimeException ex) {
+            return false;
+        }
 
         if (inscriptionReussie) {
             Message.envoyerMail(
@@ -60,14 +72,16 @@ public class ClientService extends PersistenceSupport {
 
         return inscriptionReussie;
     }
-    
+
+    @Override
     public Client authentifier(String mail, String motDePasse) {
         if (isBlank(mail) || isBlank(motDePasse)) {
             return null;
         }
         return executeRead(() -> clientDao.findByMailAndMotDePasse(mail, motDePasse));
     }
-    
+
+    @Override
     public ProfilAstral consulterProfilAstral(Client client) {
         if (client == null) {
             return null;
@@ -82,18 +96,24 @@ public class ClientService extends PersistenceSupport {
             return profilExistant;
         }
 
-        return executeInTransaction(() -> {
-            Client clientPersistant = resolveClient(client);
-            if (clientPersistant == null) {
-                return null;
-            }
-            ProfilAstral profilAstral = astroGateway.construireProfilAstral(clientPersistant);
-            clientPersistant.setProfilAstral(profilAstral);
-            clientDao.update(clientPersistant);
-            return profilAstral;
-        });
+        try {
+            return executeInTransaction(() -> {
+                Client clientPersistant = resolveClient(client);
+                if (clientPersistant == null) {
+                    return null;
+                }
+                JsonObject jsonProfil = astroNetWebClient.recupererProfilAstral(clientPersistant.getPrenom(), null);
+                ProfilAstral profilAstral = IfAstroNetMapper.versProfilAstral(jsonProfil);
+                clientPersistant.setProfilAstral(profilAstral);
+                clientDao.update(clientPersistant);
+                return profilAstral;
+            });
+        } catch (RuntimeException ex) {
+            return null;
+        }
     }
-    
+
+    @Override
     public Client consulterProfilClient(Client client) {
         if (client == null) {
             return null;
@@ -103,12 +123,13 @@ public class ClientService extends PersistenceSupport {
             if (clientPersistant == null) {
                 return null;
             }
-            List<td1.jeanico.patiment.metier.modele.Consultation> consultations = consultationDao.findByClient(clientPersistant);
+            List<Consultation> consultations = consultationDao.findByClient(clientPersistant);
             clientPersistant.setHistoriqueConsultations(consultations);
             return clientPersistant;
         });
     }
-    
+
+    @Override
     public Client recupererClientParId(Long id) {
         if (id == null) {
             return null;
