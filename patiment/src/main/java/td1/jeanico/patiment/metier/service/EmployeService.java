@@ -1,10 +1,9 @@
-package td1.jeanico.patiment.metier.service.employe;
+package td1.jeanico.patiment.metier.service;
 
 import td1.jeanico.patiment.dao.EmployeDao;
 import td1.jeanico.patiment.metier.modele.Employe;
-import td1.jeanico.patiment.metier.service.support.PersistenceSupport;
 
-public class EmployeService extends PersistenceSupport implements IEmployeService {
+public class EmployeService extends PersistenceSupport {
 
     private final EmployeDao employeDao;
 
@@ -15,8 +14,7 @@ public class EmployeService extends PersistenceSupport implements IEmployeServic
     public EmployeService(EmployeDao employeDao) {
         this.employeDao = employeDao;
     }
-
-    @Override
+    
     public Employe recupererEmployeParId(Long id) {
         if (id == null) {
             return null;

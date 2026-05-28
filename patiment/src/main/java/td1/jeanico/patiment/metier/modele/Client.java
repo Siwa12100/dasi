@@ -7,9 +7,7 @@ package td1.jeanico.patiment.metier.modele;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
+import java.util.Optional;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -68,16 +66,22 @@ public class Client extends Utilisateur {
     public Client() {
     }
     
-    public Client(String nom, String prenom, String mail, String motDePasse, String telephone, Genre genre, Adresse adresse, LocalDateTime dateNaissance, Optional<ProfilAstral> profilAstral) {
+    public Client(String nom, String prenom, String mail, String motDePasse, String telephone, Genre genre, Adresse adresse, LocalDate dateNaissance) {
         super(mail, prenom, nom, motDePasse, telephone, genre);
         this.adresse = adresse;
         this.dateNaissance = dateNaissance;
-        this.profilAstral = profilAstral.orElse(null);
+    }
+    
+    public Client(String nom, String prenom, String mail, String motDePasse, String telephone, Genre genre, Adresse adresse, LocalDate dateNaissance, ProfilAstral profilAstral) {
+        super(mail, prenom, nom, motDePasse, telephone, genre);
+        this.adresse = adresse;
+        this.dateNaissance = dateNaissance;
+        this.profilAstral = profilAstral;
     }
 
     @Override
     public String toString() {
-        return "Client{" + "id=" + ID + ", nom=" + nom + ", prenom=" + prenom + ", mail=" + mail + ", telephone=" + telephone + ", motDePasse=" + motDePasse + ", adresse=" + adresse + ", profilAstral=" + profilAstral + ', genre=' + genre + '}';
+        return "Client{" + "id=" + ID + ", nom=" + nom + ", prenom=" + prenom + ", mail=" + mail + ", telephone=" + telephone + ", motDePasse=" + motDePasse + ", adresse=" + adresse + ", profilAstral=" + profilAstral + ", genre=" + genre + "}";
     }
     
     @Override

@@ -1,4 +1,4 @@
-package td1.jeanico.patiment.metier.service.medium;
+package td1.jeanico.patiment.metier.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,9 +6,8 @@ import java.util.List;
 import td1.jeanico.patiment.dao.MediumDao;
 import td1.jeanico.patiment.metier.modele.Medium;
 import td1.jeanico.patiment.metier.modele.TypeMedium;
-import td1.jeanico.patiment.metier.service.support.PersistenceSupport;
 
-public class MediumService extends PersistenceSupport implements IMediumService {
+public class MediumService extends PersistenceSupport {
 
     private final MediumDao mediumDao;
 
@@ -19,13 +18,11 @@ public class MediumService extends PersistenceSupport implements IMediumService 
     public MediumService(MediumDao mediumDao) {
         this.mediumDao = mediumDao;
     }
-
-    @Override
+    
     public List<Medium> listerMediums() {
         return executeRead(mediumDao::findAllOrderedByDenomination);
     }
-
-    @Override
+    
     public List<Medium> listerMediums(TypeMedium typeMedium) {
         if (typeMedium == null) {
             return listerMediums();
@@ -36,13 +33,11 @@ public class MediumService extends PersistenceSupport implements IMediumService 
             case ASTROLOGUE -> new ArrayList<>(mediumDao.findAstrologuesOrderedByDenomination());
         });
     }
-
-    @Override
+    
     public List<TypeMedium> listerTypesMedium() {
         return Arrays.asList(TypeMedium.values());
     }
-
-    @Override
+    
     public Medium recupererMediumParId(Long id) {
         if (id == null) {
             return null;

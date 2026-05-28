@@ -1,10 +1,9 @@
-package td1.jeanico.patiment.metier.service.prediction;
+package td1.jeanico.patiment.metier.service;
 
 import java.util.List;
 import td1.jeanico.patiment.metier.modele.Prediction;
-import td1.jeanico.patiment.metier.service.support.AstroGateway;
 
-public class PredictionService implements IPredictionService {
+public class PredictionService {
 
     private final AstroGateway astroGateway;
 
@@ -15,8 +14,7 @@ public class PredictionService implements IPredictionService {
     public PredictionService(AstroGateway astroGateway) {
         this.astroGateway = astroGateway;
     }
-
-    @Override
+    
     public List<Prediction> demandeInspiration(int scoreAmour, int scoreSante, int scoreTravail) {
         return astroGateway.demanderInspiration(scoreAmour, scoreSante, scoreTravail);
     }

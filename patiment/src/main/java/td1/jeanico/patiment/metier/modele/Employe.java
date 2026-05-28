@@ -1,5 +1,6 @@
 package td1.jeanico.patiment.metier.modele;
 
+import java.util.Objects;
 import javax.persistence.Entity;
 
 @Entity

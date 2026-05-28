@@ -1,5 +1,7 @@
-package td1.jeanico.patiment.metier.service.consultation;
+package td1.jeanico.patiment.metier.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,10 +16,9 @@ import td1.jeanico.patiment.metier.modele.Client;
 import td1.jeanico.patiment.metier.modele.Consultation;
 import td1.jeanico.patiment.metier.modele.Employe;
 import td1.jeanico.patiment.metier.modele.Medium;
-import td1.jeanico.patiment.metier.service.support.PersistenceSupport;
 import td1.jeanico.patiment.util.Message;
 
-public class ConsultationService extends PersistenceSupport implements IConsultationService {
+public class ConsultationService extends PersistenceSupport {
 
     private final ConsultationDao consultationDao;
     private final ClientDao clientDao;
@@ -34,8 +35,7 @@ public class ConsultationService extends PersistenceSupport implements IConsulta
         this.mediumDao = mediumDao;
         this.employeDao = employeDao;
     }
-
-    @Override
+    
     public boolean demanderConsultation(Client client, Medium medium) {
         if (client == null || medium == null) {
             return false;
@@ -53,7 +53,7 @@ public class ConsultationService extends PersistenceSupport implements IConsulta
                 return false;
             }
 
-            List<Employe> employesDisponibles = employeDao.findAllDisponiblesOrderedByPrenom();
+            List<Employe> employesDisponibles = employeDao.findAllDisponiblesOrderedByNomPrenom();
             if (employesDisponibles.isEmpty()) {
                 return false;
             }
@@ -66,7 +66,7 @@ public class ConsultationService extends PersistenceSupport implements IConsulta
             employe.setEstDisponible(false);
             employeDao.update(employe);
 
-            Consultation consultation = new Consultation("", new Date(), false, clientReference, employe, mediumReference);
+            Consultation consultation = new Consultation("tout s'est bien déroulé", LocalDateTime.now(), false, clientReference, employe, mediumReference);
             consultationDao.create(consultation);
 
             employeSelectionne[0] = employe;
@@ -89,8 +89,7 @@ public class ConsultationService extends PersistenceSupport implements IConsulta
 
         return consultationCreeeAvecSucces;
     }
-
-    @Override
+    
     public List<Consultation> consulterHistoriqueConsultations(Client client) {
         if (client == null) {
             return List.of();
@@ -100,8 +99,7 @@ public class ConsultationService extends PersistenceSupport implements IConsulta
             return clientReference == null ? List.of() : consultationDao.findByClient(clientReference);
         });
     }
-
-    @Override
+    
     public Consultation consulterConsultationAffectee(Employe employe) {
         if (employe == null) {
             return null;
@@ -115,8 +113,7 @@ public class ConsultationService extends PersistenceSupport implements IConsulta
             return consultations.isEmpty() ? null : consultations.get(0);
         });
     }
-
-    @Override
+    
     public void declarerPret(Consultation consultation) {
         if (consultation == null) {
             return;
@@ -125,13 +122,13 @@ public class ConsultationService extends PersistenceSupport implements IConsulta
         if (consultationReference == null) {
             return;
         }
+        DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM à hhhmm");
         Message.envoyerNotification(
                 consultationReference.getClient().getTelephone(),
-                "Votre medium " + safe(consultationReference.getMedium().getDenomination()) + " est pret pour la consultation."
+                "Bonjour " + safe(consultationReference.getClient().getPrenom()) + ". J'ai bien reçu votre demande de consultation du " + safe(consultationReference.getDate().format(pattern)) + ". Vous pouvez à présent me contacter au " + safe(consultationReference.getEmploye().getTelephone()) + ". A tout de suite !\r\nMédiumiquement vôtre, " + safe(consultationReference.getMedium().getGenre().getSuffix()) + " " + safe(consultationReference.getMedium().getDenomination())
         );
     }
-
-    @Override
+    
     public void terminerConsultation(Consultation consultation, String commentaire) {
         if (consultation == null) {
             return;
@@ -151,8 +148,7 @@ public class ConsultationService extends PersistenceSupport implements IConsulta
             return null;
         });
     }
-
-    @Override
+    
     public Consultation recupererConsultationParId(Long id) {
         if (id == null) {
             return null;

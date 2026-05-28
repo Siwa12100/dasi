@@ -1,4 +1,4 @@
-package td1.jeanico.patiment.metier.service.statistique;
+package td1.jeanico.patiment.metier.service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,9 +16,8 @@ import td1.jeanico.patiment.metier.modele.Client;
 import td1.jeanico.patiment.metier.modele.Consultation;
 import td1.jeanico.patiment.metier.modele.Employe;
 import td1.jeanico.patiment.metier.modele.Medium;
-import td1.jeanico.patiment.metier.service.support.PersistenceSupport;
 
-public class StatistiqueService extends PersistenceSupport implements IStatistiqueService {
+public class StatistiqueService extends PersistenceSupport {
 
     private final ConsultationDao consultationDao;
     private final MediumDao mediumDao;
@@ -35,8 +34,7 @@ public class StatistiqueService extends PersistenceSupport implements IStatistiq
         this.employeDao = employeDao;
         this.clientDao = clientDao;
     }
-
-    @Override
+    
     public Map<Medium, Integer> listerNombreConsultationsParMedium() {
         return executeRead(() -> {
             Map<Medium, Integer> resultat = new LinkedHashMap<>();
@@ -49,12 +47,11 @@ public class StatistiqueService extends PersistenceSupport implements IStatistiq
             return resultat;
         });
     }
-
-    @Override
+    
     public Map<Employe, Integer> listerRepartitionClientParEmploye() {
         return executeRead(() -> {
             Map<Employe, Set<Long>> clientsDistinctsParEmploye = new LinkedHashMap<>();
-            for (Employe employe : employeDao.findAllOrderedByPrenom()) {
+            for (Employe employe : employeDao.findAllOrderedByNomPrenom()) {
                 clientsDistinctsParEmploye.put(employe, new LinkedHashSet<>());
             }
             for (Consultation consultation : consultationDao.findAllOrderedByDateDesc()) {
@@ -70,8 +67,7 @@ public class StatistiqueService extends PersistenceSupport implements IStatistiq
             return resultat;
         });
     }
-
-    @Override
+    
     public List<Map<Medium, Integer>> listerMediumsPopulaire(int nbMediums) {
         if (nbMediums <= 0) {
             return List.of();
@@ -93,8 +89,7 @@ public class StatistiqueService extends PersistenceSupport implements IStatistiq
             return resultat;
         });
     }
-
-    @Override
+    
     public Map<String, Integer> listerRepartitionGeographiqueClients() {
         return executeRead(() -> {
             Map<String, Integer> resultat = new TreeMap<>();

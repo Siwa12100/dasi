@@ -29,6 +29,10 @@ public abstract class Utilisateur implements Serializable {
     protected Genre genre;
 
 
+    public Utilisateur() {
+        
+    }
+    
     public Utilisateur(String mail, String prenom, String nom, String motDePasse, String telephone, Genre genre) {
         this.mail = mail;
         this.prenom = prenom;

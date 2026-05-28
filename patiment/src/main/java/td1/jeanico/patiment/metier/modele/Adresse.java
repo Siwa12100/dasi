@@ -1,7 +1,6 @@
 package td1.jeanico.patiment.metier.modele;
 
 import java.io.Serializable;
-import java.util.Objects;
 import javax.persistence.Embeddable;
 
 @Embeddable
@@ -16,11 +15,12 @@ public class Adresse implements Serializable {
     public Adresse() {
     }
 
-    public Adresse(String numeroDeVoie, String nomDeVoie, String codePostal, String codeDepartement) {
+    public Adresse(String numeroDeVoie, String nomDeVoie, String codePostal, String codeDepartement, String ville) {
         this.numeroDeVoie = numeroDeVoie;
         this.nomDeVoie = nomDeVoie;
         this.codePostal = codePostal;
         this.codeDepartement = codeDepartement;
+        this.ville = ville;
     }
 
     public String getNumeroDeVoie() {

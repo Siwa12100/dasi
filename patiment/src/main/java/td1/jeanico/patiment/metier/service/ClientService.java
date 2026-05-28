@@ -1,15 +1,13 @@
-package td1.jeanico.patiment.metier.service.client;
+package td1.jeanico.patiment.metier.service;
 
 import java.util.List;
 import td1.jeanico.patiment.dao.ClientDao;
 import td1.jeanico.patiment.dao.ConsultationDao;
 import td1.jeanico.patiment.metier.modele.Client;
 import td1.jeanico.patiment.metier.modele.ProfilAstral;
-import td1.jeanico.patiment.metier.service.support.AstroGateway;
-import td1.jeanico.patiment.metier.service.support.PersistenceSupport;
 import td1.jeanico.patiment.util.Message;
 
-public class ClientService extends PersistenceSupport implements IClientService {
+public class ClientService extends PersistenceSupport {
 
     private final ClientDao clientDao;
     private final ConsultationDao consultationDao;
@@ -24,8 +22,7 @@ public class ClientService extends PersistenceSupport implements IClientService 
         this.consultationDao = consultationDao;
         this.astroGateway = astroGateway;
     }
-
-    @Override
+    
     public boolean inscrire(Client client) {
         if (client == null || isBlank(client.getMail()) || isBlank(client.getMotDePasse())) {
             return false;
@@ -63,16 +60,14 @@ public class ClientService extends PersistenceSupport implements IClientService 
 
         return inscriptionReussie;
     }
-
-    @Override
+    
     public Client authentifier(String mail, String motDePasse) {
         if (isBlank(mail) || isBlank(motDePasse)) {
             return null;
         }
         return executeRead(() -> clientDao.findByMailAndMotDePasse(mail, motDePasse));
     }
-
-    @Override
+    
     public ProfilAstral consulterProfilAstral(Client client) {
         if (client == null) {
             return null;
@@ -98,8 +93,7 @@ public class ClientService extends PersistenceSupport implements IClientService 
             return profilAstral;
         });
     }
-
-    @Override
+    
     public Client consulterProfilClient(Client client) {
         if (client == null) {
             return null;
@@ -114,8 +108,7 @@ public class ClientService extends PersistenceSupport implements IClientService 
             return clientPersistant;
         });
     }
-
-    @Override
+    
     public Client recupererClientParId(Long id) {
         if (id == null) {
             return null;

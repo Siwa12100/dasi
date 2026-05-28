@@ -27,18 +27,18 @@ public class EmployeDao {
         return em.find(Employe.class, id);
     }
 
-    public List<Employe> findAllOrderedByPrenom() {
+    public List<Employe> findAllOrderedByNomPrenom() {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.createQuery(
-                "SELECT e FROM Employe e ORDER BY e.prenom ASC",
+                "SELECT e FROM Employe e ORDER BY e.nom ASC, e.prenom ASC",
                 Employe.class
         ).getResultList();
     }
 
-    public List<Employe> findAllDisponiblesOrderedByPrenom() {
+    public List<Employe> findAllDisponiblesOrderedByNomPrenom() {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.createQuery(
-                "SELECT e FROM Employe e WHERE e.estDisponible = TRUE ORDER BY e.prenom ASC",
+                "SELECT e FROM Employe e WHERE e.estDisponible = TRUE ORDER BY e.nom ASC, e.prenom ASC",
                 Employe.class
         ).getResultList();
     }

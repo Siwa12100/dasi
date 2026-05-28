@@ -1,4 +1,4 @@
-package td1.jeanico.patiment.metier.service.support;
+package td1.jeanico.patiment.metier.service;
 
 import java.util.function.Supplier;
 import td1.jeanico.patiment.dao.JpaUtil;
