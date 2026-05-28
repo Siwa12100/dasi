@@ -55,22 +55,7 @@ public class ProfilAstral implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(animalTotal, signeZodiac, couleurBonheur, signeChinois);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        ProfilAstral other = (ProfilAstral) obj;
-        return Objects.equals(this.animalTotal, other.animalTotal)
-                && Objects.equals(this.signeZodiac, other.signeZodiac)
-                && Objects.equals(this.couleurBonheur, other.couleurBonheur)
-                && Objects.equals(this.signeChinois, other.signeChinois);
+    public String toString() {
+        return "ProfilAstral{" + "animalTotal=" + animalTotal + ", signeZodiac=" + signeZodiac + ", couleurBonheur=" + couleurBonheur + ", signeChinois=" + signeChinois + '}';
     }
 }

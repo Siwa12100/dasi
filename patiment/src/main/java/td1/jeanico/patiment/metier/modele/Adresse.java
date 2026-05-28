@@ -11,6 +11,7 @@ public class Adresse implements Serializable {
     private String nomDeVoie;
     private String codePostal;
     private String codeDepartement;
+    private String ville;
 
     public Adresse() {
     }
@@ -54,23 +55,16 @@ public class Adresse implements Serializable {
         this.codeDepartement = codeDepartement;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(numeroDeVoie, nomDeVoie, codePostal, codeDepartement);
+    public String getVille() {
+        return ville;
+    }
+
+    public void setVille(String ville) {
+        this.ville = ville;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        Adresse other = (Adresse) obj;
-        return Objects.equals(this.numeroDeVoie, other.numeroDeVoie)
-                && Objects.equals(this.nomDeVoie, other.nomDeVoie)
-                && Objects.equals(this.codePostal, other.codePostal)
-                && Objects.equals(this.codeDepartement, other.codeDepartement);
+    public String toString() {
+        return "Adresse{" + "numeroDeVoie=" + numeroDeVoie + ", nomDeVoie=" + nomDeVoie + ", codePostal=" + codePostal + ", codeDepartement=" + codeDepartement + ", ville=" + ville + '}';
     }
 }

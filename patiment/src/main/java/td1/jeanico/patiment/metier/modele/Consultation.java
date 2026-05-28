@@ -1,15 +1,13 @@
 package td1.jeanico.patiment.metier.modele;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 public class Consultation implements Serializable {
@@ -20,8 +18,7 @@ public class Consultation implements Serializable {
 
     private String commentaire;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private LocalDateTime date;
 
     private boolean estTermine;
 
@@ -37,7 +34,7 @@ public class Consultation implements Serializable {
     public Consultation() {
     }
 
-    public Consultation(String commentaire, Date date, boolean estTermine, Client client, Employe employe, Medium medium) {
+    public Consultation(String commentaire, LocalDateTime date, boolean estTermine, Client client, Employe employe, Medium medium) {
         this.commentaire = commentaire;
         this.date = date;
         this.estTermine = estTermine;
@@ -62,11 +59,11 @@ public class Consultation implements Serializable {
         this.commentaire = commentaire;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

@@ -4,6 +4,7 @@
  */
 package td1.jeanico.patiment.metier.modele;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.AttributeOverride;
@@ -21,7 +22,7 @@ import javax.persistence.Transient;
 @Entity
 public class Client extends Utilisateur {
 
-    protected String nom;
+    private LocalDate dateNaissance;
 
     @Embedded
     private Adresse adresse;
@@ -32,12 +33,12 @@ public class Client extends Utilisateur {
     @Transient
     private List<Consultation> historiqueConsultations;
 
-    public String getNom() {
-        return nom;
+    public LocalDate getDateNaissance() {
+        return dateNaissance;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setDateNaissance(LocalDate dateNaissance) {
+        this.dateNaissance = dateNaissance;
     }
 
     public Adresse getAdresse() {
@@ -67,23 +68,19 @@ public class Client extends Utilisateur {
     public Client() {
     }
     
-    public Client(String nom, String prenom, String mail, String motDePasse) {
-        super(mail, prenom, motDePasse, null);
-        this.nom = nom;
-    }
-
-    public Client(String nom, String prenom, String mail, String motDePasse, String telephone, Adresse adresse) {
-        super(mail, prenom, motDePasse, telephone);
-        this.nom = nom;
+    public Client(String nom, String prenom, String mail, String motDePasse, String telephone, Genre genre, Adresse adresse, LocalDateTime dateNaissance, Optional<ProfilAstral> profilAstral) {
+        super(mail, prenom, nom, motDePasse, telephone, genre);
         this.adresse = adresse;
+        this.dateNaissance = dateNaissance;
+        this.profilAstral = profilAstral.orElse(null);
     }
 
     @Override
     public String toString() {
-        return "Client{" + "id=" + ID + ", nom=" + nom + ", prenom=" + prenom + ", mail=" + mail + ", telephone=" + telephone + ", adresse=" + adresse + ", profilAstral=" + profilAstral + '}';
+        return "Client{" + "id=" + ID + ", nom=" + nom + ", prenom=" + prenom + ", mail=" + mail + ", telephone=" + telephone + ", motDePasse=" + motDePasse + ", adresse=" + adresse + ", profilAstral=" + profilAstral + ', genre=' + genre + '}';
     }
     
-        @Override
+    @Override
     public int hashCode() {
         int hash = 7;
         hash = 37 * hash + Objects.hashCode(this.ID);

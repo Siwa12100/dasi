@@ -3,6 +3,8 @@ package td1.jeanico.patiment.metier.modele;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,17 +21,21 @@ public abstract class Utilisateur implements Serializable {
 
     protected String mail;
     protected String prenom;
+    protected String nom;
     protected String motDePasse;
     protected String telephone;
+    
+    @Enumerated(EnumType.STRING)
+    protected Genre genre;
 
-    public Utilisateur() {
-    }
 
-    public Utilisateur(String mail, String prenom, String motDePasse, String telephone) {
+    public Utilisateur(String mail, String prenom, String nom, String motDePasse, String telephone, Genre genre) {
         this.mail = mail;
         this.prenom = prenom;
+        this.nom = nom;
         this.motDePasse = motDePasse;
         this.telephone = telephone;
+        this.genre = genre;
     }
 
     public Long getId() {
@@ -70,6 +76,22 @@ public abstract class Utilisateur implements Serializable {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public Genre getGenre() {
+        return genre;
+    }
+
+    public void setGenre(Genre genre) {
+        this.genre = genre;
     }
 
     @Override

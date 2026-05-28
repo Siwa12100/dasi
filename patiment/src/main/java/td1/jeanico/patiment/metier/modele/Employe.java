@@ -10,8 +10,8 @@ public class Employe extends Utilisateur {
     public Employe() {
     }
 
-    public Employe(String mail, String prenom, String motDePasse, String telephone, boolean estDisponible) {
-        super(mail, prenom, motDePasse, telephone);
+    public Employe(String mail, String prenom, String nom, String motDePasse, String telephone, Genre genre, boolean estDisponible) {
+        super(mail, prenom, nom, motDePasse, telephone, genre);
         this.estDisponible = estDisponible;
     }
 
@@ -21,5 +21,32 @@ public class Employe extends Utilisateur {
 
     public void setEstDisponible(boolean estDisponible) {
         this.estDisponible = estDisponible;
+    }
+
+    @Override
+    public String toString() {
+        return "Employe{" + "id=" + ID + ", nom=" + nom + ", prenom=" + prenom + ", mail=" + mail + ", telephone=" + telephone + ", motDePasse=" + motDePasse + ", estDisponible=" + estDisponible + ", genre=" + genre + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.ID);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Employe other = (Employe) obj;
+        return Objects.equals(this.ID, other.ID);
     }
 }
