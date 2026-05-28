@@ -1,0 +1,37 @@
+services:
+  dev:
+    image: mcr.microsoft.com/devcontainers/java:1-21-bookworm
+    volumes:
+      - ..:/workspaces/patiment:cached
+    working_dir: /workspaces/patiment/patiment
+    command: sleep infinity
+    environment:
+      DB_HOST: dasi-mariadb
+      DB_PORT: "3306"
+      DB_NAME: DASI-DB
+      DB_USER: dasi
+      DB_PASSWORD: dasi
+    depends_on:
+      dasi-mariadb:
+        condition: service_healthy
+
+  dasi-mariadb:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: DASI-DB
+      MARIADB_USER: dasi
+      MARIADB_PASSWORD: dasi
+    ports:
+      - "3306:3306"
+    volumes:
+      - dasi-mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  dasi-mariadb-data:

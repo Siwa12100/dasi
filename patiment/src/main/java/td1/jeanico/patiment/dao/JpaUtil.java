@@ -65,6 +65,17 @@ public class JpaUtil {
             System.out.println("[JpaUtil:Log] " + message);
         }
     }
+
+    /**
+     * Retourne une variable d'environnement ou sa valeur par défaut.
+     */
+    private static String envOrDefault(String key, String defaultValue) {
+        String value = System.getenv(key);
+        if (value == null || value.isBlank()) {
+            return defaultValue;
+        }
+        return value;
+    }
     
     /**
      * Méthode pour désactiver l'affichage du Log de JpaUtil.
@@ -87,6 +98,17 @@ public class JpaUtil {
             entityManagerFactory.close();
         }
         Map<String, String> propertyMap = new HashMap<>();
+        String dbHost = envOrDefault("DB_HOST", "localhost");
+        String dbPort = envOrDefault("DB_PORT", "3306");
+        String dbName = envOrDefault("DB_NAME", "DASI-DB");
+        String dbUser = envOrDefault("DB_USER", "dasi");
+        String dbPassword = envOrDefault("DB_PASSWORD", "dasi");
+
+        propertyMap.put("javax.persistence.jdbc.url", "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName + "?zeroDateTimeBehavior=CONVERT_TO_NULL");
+        propertyMap.put("javax.persistence.jdbc.user", dbUser);
+        propertyMap.put("javax.persistence.jdbc.password", dbPassword);
+        propertyMap.put("javax.persistence.jdbc.driver", "com.mysql.cj.jdbc.Driver");
+
         if (!JPAUTIL_LOG_ACTIVE) {
             propertyMap.put("eclipselink.logging.level", "OFF");
         }

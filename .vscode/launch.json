@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Debug Patiment (Java 21)",
+      "request": "launch",
+      "mainClass": "td1.jeanico.patiment.console.Patiment",
+      "projectName": "patiment",
+      "cwd": "${workspaceFolder}/patiment",
+      "console": "integratedTerminal",
+      "vmArgs": "-Dfile.encoding=UTF-8"
+    }
+  ]
+}

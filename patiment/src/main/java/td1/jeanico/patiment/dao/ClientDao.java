@@ -4,6 +4,7 @@
  */
 package td1.jeanico.patiment.dao;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import td1.jeanico.patiment.metier.modele.Client;
 
@@ -12,10 +13,17 @@ import td1.jeanico.patiment.metier.modele.Client;
  * @author ncolomb
  */
 public class ClientDao {
-    // TODO: est-ce bien static ?
-    public static void create(Client cl) {
+    public void create(Client cl) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         em.persist(cl);
+    }
+
+    public List<Client> findAllOrderedByNomPrenom() {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        return em.createQuery(
+                "SELECT c FROM Client c ORDER BY c.nom ASC, c.prenom ASC",
+                Client.class
+        ).getResultList();
     }
     
 }

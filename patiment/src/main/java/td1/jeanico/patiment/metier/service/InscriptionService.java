@@ -4,23 +4,46 @@
  */
 package td1.jeanico.patiment.metier.service;
 
+import java.util.List;
 import td1.jeanico.patiment.dao.JpaUtil;
 import td1.jeanico.patiment.dao.ClientDao;
 import td1.jeanico.patiment.metier.modele.Client;
-import td1.jeanico.patiment.util.Message;
 
 /**
  *
  * @author ncolomb
  */
 public class InscriptionService {
+    private final ClientDao clientDao;
+
+    public InscriptionService() {
+        this(new ClientDao());
+    }
+
+    public InscriptionService(ClientDao clientDao) {
+        this.clientDao = clientDao;
+    }
+
     public void inscrireClient(Client client) {
         JpaUtil.creerContextePersistance();
         try {
             JpaUtil.ouvrirTransaction();
+            clientDao.create(client);
+            JpaUtil.validerTransaction();
         } catch (Exception ex) {
-            System.out.println("Err");
+            JpaUtil.annulerTransaction();
+            throw new RuntimeException("Impossible d'inscrire le client", ex);
+        } finally {
+            JpaUtil.fermerContextePersistance();
         }
-        ClientDao.create(client);
+    }
+
+    public List<Client> listerClients() {
+        JpaUtil.creerContextePersistance();
+        try {
+            return clientDao.findAllOrderedByNomPrenom();
+        } finally {
+            JpaUtil.fermerContextePersistance();
+        }
     }
 }

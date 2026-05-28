@@ -1,0 +1,46 @@
+{
+  "name": "patiment-dev",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspaces/patiment",
+  "runServices": [
+    "dev",
+    "dasi-mariadb"
+  ],
+  "shutdownAction": "stopCompose",
+  "remoteUser": "root",
+  "forwardPorts": [
+    3306,
+    9090
+  ],
+  "portsAttributes": {
+    "3306": {
+      "label": "MariaDB"
+    },
+    "9090": {
+      "label": "MariaDB mapped 8080 (requested)"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "java.import.maven.enabled": true,
+        "maven.executable.preferMavenWrapper": true,
+        "java.configuration.updateBuildConfiguration": "interactive"
+      },
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-maven",
+        "redhat.vscode-xml",
+        "adashen.vscode-tomcat",
+        "vmware.vscode-spring-boot",
+        "vmware.vscode-boot-dev-pack",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-mysql",
+        "cweijan.vscode-database-client2",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "postCreateCommand": "cd patiment && mvn -q -DskipTests dependency:go-offline || true"
+}
