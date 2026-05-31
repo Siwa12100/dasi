@@ -10,15 +10,15 @@
   "shutdownAction": "stopCompose",
   "remoteUser": "root",
   "forwardPorts": [
-    3306,
+    4377,
     9090
   ],
   "portsAttributes": {
-    "3306": {
+    "4377": {
       "label": "MariaDB"
     },
     "9090": {
-      "label": "MariaDB mapped 8080 (requested)"
+      "label": "App 9090"
     }
   },
   "customizations": {
@@ -26,7 +26,8 @@
       "settings": {
         "java.import.maven.enabled": true,
         "maven.executable.preferMavenWrapper": true,
-        "java.configuration.updateBuildConfiguration": "interactive"
+        "java.configuration.updateBuildConfiguration": "interactive",
+        "git.safe.directory": "/workspaces/patiment"
       },
       "extensions": [
         "vscjava.vscode-java-pack",
@@ -42,5 +43,5 @@
       ]
     }
   },
-  "postCreateCommand": "cd patiment && mvn -q -DskipTests dependency:go-offline || true"
+  "postCreateCommand": "git config --global --add safe.directory /workspaces/patiment && cd patiment && mvn -q -DskipTests dependency:go-offline || true"
 }

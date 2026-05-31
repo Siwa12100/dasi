@@ -1,6 +1,7 @@
 services:
   dev:
     image: mcr.microsoft.com/devcontainers/java:1-21-bookworm
+    user: root
     volumes:
       - ..:/workspaces/patiment:cached
     working_dir: /workspaces/patiment/patiment
@@ -11,6 +12,7 @@ services:
       DB_NAME: DASI-DB
       DB_USER: dasi
       DB_PASSWORD: dasi
+      GIT_CONFIG_NOSYSTEM: "false"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
