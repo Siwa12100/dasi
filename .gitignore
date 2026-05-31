@@ -1,1 +1,25 @@
-target/
+# Maven / Java build outputs
+**/target/
+*.log
+hs_err_pid*
+replay_pid*
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env / local overrides
+.env
+.env.*
+
+# Temporary files
+*.tmp
+*.swp

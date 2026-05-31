@@ -7,17 +7,17 @@ services:
     working_dir: /workspaces/patiment/patiment
     command: sleep infinity
     environment:
-      DB_HOST: host.docker.internal
-      DB_PORT: "4377"
+      DB_HOST: dasi-mariadb
+      DB_PORT: "3306"
       DB_NAME: DASI-DB
       DB_USER: dasi
       DB_PASSWORD: dasi
       GIT_CONFIG_NOSYSTEM: "false"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     depends_on:
       dasi-mariadb:
         condition: service_healthy
+    networks:
+      - dasi-network
 
   dasi-mariadb:
     image: mariadb:11
@@ -36,6 +36,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+    networks:
+      - dasi-network
 
 volumes:
   dasi-mariadb-data:
+
+networks:
+  dasi-network:

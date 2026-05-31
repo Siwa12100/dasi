@@ -2,15 +2,15 @@
 <persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence           http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
   <persistence-unit name="td1_jeanico_patiment_pu" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>td1.jeanico.patiment.metier.modele.Utilisateur</class>
-    <class>td1.jeanico.patiment.metier.modele.Client</class>
-    <class>td1.jeanico.patiment.metier.modele.Employe</class>
-    <class>td1.jeanico.patiment.metier.modele.Medium</class>
-    <class>td1.jeanico.patiment.metier.modele.Spirite</class>
-    <class>td1.jeanico.patiment.metier.modele.Cartomancien</class>
-    <class>td1.jeanico.patiment.metier.modele.Astrologue</class>
-    <class>td1.jeanico.patiment.metier.modele.Consultation</class>
-    <class>td1.jeanico.patiment.metier.modele.Prediction</class>
+    <class>td1.jeanico.patiment.modeles.utilisateurs.Utilisateur</class>
+    <class>td1.jeanico.patiment.modeles.utilisateurs.Client</class>
+    <class>td1.jeanico.patiment.modeles.utilisateurs.Employe</class>
+    <class>td1.jeanico.patiment.modeles.mediums.Medium</class>
+    <class>td1.jeanico.patiment.modeles.mediums.Spirite</class>
+    <class>td1.jeanico.patiment.modeles.mediums.Cartomancien</class>
+    <class>td1.jeanico.patiment.modeles.mediums.Astrologue</class>
+    <class>td1.jeanico.patiment.modeles.consultations.Consultation</class>
+    <class>td1.jeanico.patiment.modeles.consultations.Prediction</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://dasi-mariadb:3306/DASI-DB?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="dasi"/>
