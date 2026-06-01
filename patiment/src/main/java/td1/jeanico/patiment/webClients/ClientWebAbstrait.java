@@ -25,6 +25,7 @@ public abstract class ClientWebAbstrait {
 
     /**
      * Permet d'injecter un client HTTP personnalisé.
+     * @param httpClient
      */
     protected ClientWebAbstrait(HttpClient httpClient) {
         this.httpClient = httpClient;
@@ -33,6 +34,9 @@ public abstract class ClientWebAbstrait {
     /**
      * Exécute un GET et retourne le JSON de réponse.
      * Lève une RuntimeException si l'appel échoue ou si le code HTTP n'est pas 200.
+     * @param url
+     * @param parametresCleValeur
+     * @return 
      */
     protected JsonObject executerGetJson(String url, String... parametresCleValeur) {
         if (url == null || url.isBlank()) {
@@ -54,7 +58,7 @@ public abstract class ClientWebAbstrait {
             try (JsonReader reader = Json.createReader(new StringReader(httpResponse.body()))) {
                 return reader.readObject();
             }
-        } catch (Exception ex) {
+        } catch (IOException | InterruptedException ex) {
             throw new RuntimeException("Impossible d'appeler le service web", ex);
         }
     }

@@ -35,6 +35,10 @@ public class StatistiqueService extends SupportPersistance {
 
     /**
      * Constructeur injectable.
+     * @param consultationDao
+     * @param mediumDao
+     * @param employeDao
+     * @param clientDao
      */
     public StatistiqueService(ConsultationDao consultationDao, MediumDao mediumDao, EmployeDao employeDao, ClientDao clientDao) {
         this.consultationDao = consultationDao;
@@ -45,6 +49,7 @@ public class StatistiqueService extends SupportPersistance {
     
     /**
      * Compte le nombre de consultations par médium (zéros inclus).
+     * @return 
      */
     public Map<Medium, Integer> listerNombreConsultationsParMedium() {
         return executerLecture(() -> {
@@ -61,6 +66,7 @@ public class StatistiqueService extends SupportPersistance {
     
     /**
      * Calcule le nombre de clients distincts suivis par employé.
+     * @return 
      */
     public Map<Employe, Integer> listerRepartitionClientParEmploye() {
         return executerLecture(() -> {
@@ -84,6 +90,8 @@ public class StatistiqueService extends SupportPersistance {
     
     /**
      * Retourne les N médiums les plus demandés, triés par volume décroissant.
+     * @param nbMediums
+     * @return 
      */
     public List<Map<Medium, Integer>> listerMediumsPopulaire(int nbMediums) {
         if (nbMediums <= 0) {
@@ -110,6 +118,7 @@ public class StatistiqueService extends SupportPersistance {
     
     /**
      * Retourne la répartition des clients par code département.
+     * @return 
      */
     public Map<String, Integer> listerRepartitionGeographiqueClients() {
         return executerLecture(() -> {

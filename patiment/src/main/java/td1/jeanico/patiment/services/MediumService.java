@@ -22,6 +22,7 @@ public class MediumService extends SupportPersistance {
 
     /**
      * Constructeur injectable.
+     * @param mediumDao
      */
     public MediumService(MediumDao mediumDao) {
         this.mediumDao = mediumDao;
@@ -29,6 +30,7 @@ public class MediumService extends SupportPersistance {
     
     /**
      * Liste tous les médiums par ordre alphabétique de dénomination.
+     * @return 
      */
     public List<Medium> listerMediums() {
         return executerLecture(mediumDao::listerParDenomination);
@@ -37,6 +39,8 @@ public class MediumService extends SupportPersistance {
     /**
      * Liste les médiums filtrés par type.
      * Si le type est null, retourne la liste complète.
+     * @param typeMedium
+     * @return 
      */
     public List<Medium> listerMediums(TypeMedium typeMedium) {
         if (typeMedium == null) {
@@ -51,6 +55,7 @@ public class MediumService extends SupportPersistance {
     
     /**
      * Retourne l'ensemble des types de médium disponibles.
+     * @return 
      */
     public List<TypeMedium> listerTypesMedium() {
         return Arrays.asList(TypeMedium.values());
@@ -58,6 +63,8 @@ public class MediumService extends SupportPersistance {
     
     /**
      * Récupère un médium par son identifiant.
+     * @param id
+     * @return 
      */
     public Medium recupererMediumParId(Long id) {
         if (id == null) {

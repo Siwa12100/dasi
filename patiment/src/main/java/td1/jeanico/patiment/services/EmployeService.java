@@ -18,6 +18,7 @@ public class EmployeService extends SupportPersistance {
 
     /**
      * Constructeur injectable.
+     * @param employeDao
      */
     public EmployeService(EmployeDao employeDao) {
         this.employeDao = employeDao;
@@ -25,6 +26,9 @@ public class EmployeService extends SupportPersistance {
 
     /**
      * Authentifie un employé par mail/mot de passe.
+     * @param mail
+     * @param motDePasse
+     * @return 
      */
     public Employe authentifier(String mail, String motDePasse) {
         if (estVide(mail) || estVide(motDePasse)) {
@@ -35,6 +39,8 @@ public class EmployeService extends SupportPersistance {
     
     /**
      * Récupère un employé par son identifiant.
+     * @param id
+     * @return 
      */
     public Employe recupererEmployeParId(Long id) {
         if (id == null) {

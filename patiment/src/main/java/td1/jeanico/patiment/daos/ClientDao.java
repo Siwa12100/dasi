@@ -24,12 +24,6 @@ public class ClientDao {
         return em.merge(cl);
     }
 
-    public void supprimer(Client cl) {
-        EntityManager em = JpaUtil.obtenirContextePersistance();
-        Client clientGere = em.contains(cl) ? cl : em.merge(cl);
-        em.remove(clientGere);
-    }
-
     public Client trouverParId(Long id) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.find(Client.class, id);

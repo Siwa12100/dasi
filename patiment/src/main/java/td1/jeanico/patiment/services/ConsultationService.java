@@ -35,6 +35,10 @@ public class ConsultationService extends SupportPersistance {
 
     /**
      * Constructeur injectable pour tests/intégration.
+     * @param consultationDao
+     * @param clientDao
+     * @param employeDao
+     * @param mediumDao
      */
     public ConsultationService(ConsultationDao consultationDao, ClientDao clientDao, MediumDao mediumDao, EmployeDao employeDao) {
         this.consultationDao = consultationDao;
@@ -46,12 +50,16 @@ public class ConsultationService extends SupportPersistance {
     /**
      * Crée une consultation en affectant un employé compatible et disponible.
      * L'affectation privilégie l'employé au portefeuille le plus faible.
+     * @param client
+     * @param medium
+     * @return 
      */
     public boolean demanderConsultation(Client client, Medium medium) {
         if (client == null || medium == null) {
             return false;
         }
 
+        // TODO: Pas très propre ?
         Employe[] employeSelectionne = new Employe[1];
         Consultation[] consultationCreee = new Consultation[1];
         Client[] clientPersistant = new Client[1];
@@ -107,6 +115,8 @@ public class ConsultationService extends SupportPersistance {
     
     /**
      * Retourne l'historique des consultations d'un client (ordre décroissant par date).
+     * @param client
+     * @return 
      */
     public List<Consultation> consulterHistoriqueConsultations(Client client) {
         if (client == null) {
@@ -120,6 +130,8 @@ public class ConsultationService extends SupportPersistance {
     
     /**
      * Retourne la consultation active affectée à un employé.
+     * @param employe
+     * @return 
      */
     public Consultation consulterConsultationAffectee(Employe employe) {
         if (employe == null) {
@@ -137,6 +149,7 @@ public class ConsultationService extends SupportPersistance {
     
     /**
      * Envoie au client une notification indiquant que le médium est prêt.
+     * @param consultation
      */
     public void declarerPret(Consultation consultation) {
         if (consultation == null) {
@@ -160,6 +173,8 @@ public class ConsultationService extends SupportPersistance {
     
     /**
      * Termine une consultation et libère immédiatement l'employé affecté.
+     * @param consultation
+     * @param commentaire
      */
     public void terminerConsultation(Consultation consultation, String commentaire) {
         if (consultation == null) {
@@ -185,6 +200,8 @@ public class ConsultationService extends SupportPersistance {
     
     /**
      * Recherche une consultation par son identifiant.
+     * @param id
+     * @return 
      */
     public Consultation recupererConsultationParId(Long id) {
         if (id == null) {

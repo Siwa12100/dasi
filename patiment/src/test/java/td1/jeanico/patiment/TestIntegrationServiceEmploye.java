@@ -18,7 +18,7 @@ class TestIntegrationServiceEmploye extends TestIntegrationAbstrait {
     // Comportement attendu: l'employe est retrouve avec les bons identifiants et refuse avec des identifiants invalides.
     @Test
     void authentifierValideLesIdentifiantsDeLEmploye() {
-        Employe employe = creerEmploye("anna@predictif.fr", "anna123", Genre.F, true);
+        Employe employe = creerEmploye("anna@predictif.fr", "anna123", Genre.FEMME, true);
         EmployeService employeService = new EmployeService(employeDao);
 
         Employe employeAuthentifie = employeService.authentifier("anna@predictif.fr", "anna123");

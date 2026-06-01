@@ -1,8 +1,6 @@
 package td1.jeanico.patiment.services;
 
 import td1.jeanico.patiment.mappers.MappeurAstroNet;
-
-import java.util.List;
 import jakarta.json.JsonObject;
 import td1.jeanico.patiment.modeles.consultations.Prediction;
 import td1.jeanico.patiment.modeles.clients.ProfilAstral;
@@ -21,6 +19,7 @@ public class PredictionService {
 
     /**
      * Constructeur injectable.
+     * @param astroNetWebClient
      */
     public PredictionService(ClientWebAstroNet astroNetWebClient) {
         this.astroNetWebClient = astroNetWebClient;
@@ -29,13 +28,18 @@ public class PredictionService {
     /**
      * Demande une inspiration à AstroNet à partir d'un profil astral et de 3 scores.
      * Retourne une prédiction vide si les entrées sont invalides ou si l'API échoue.
+     * @param profilAstral
+     * @param scoreAmour
+     * @param scoreSante
+     * @param scoreTravail
+     * @return 
      */
-    public List<Prediction> demandeInspiration(ProfilAstral profilAstral, int scoreAmour, int scoreSante, int scoreTravail) {
+    public Prediction demandeInspiration(ProfilAstral profilAstral, int scoreAmour, int scoreSante, int scoreTravail) {
         if (!estScoreValide(scoreAmour)
                 || !estScoreValide(scoreSante)
                 || !estScoreValide(scoreTravail)
                 || !profilAstralValide(profilAstral)) {
-            return List.of(new Prediction("", "", ""));
+            return null;
         }
         try {
             JsonObject jsonPredictions = astroNetWebClient.recupererPredictions(
@@ -45,11 +49,10 @@ public class PredictionService {
                     scoreSante,
                     scoreTravail
             );
-            List<Prediction> predictions = MappeurAstroNet.versPredictions(jsonPredictions);
-            return predictions.isEmpty() ? List.of(new Prediction("", "", "")) : predictions;
+            return MappeurAstroNet.versPrediction(jsonPredictions);
         } catch (RuntimeException ex) {
             // Fallback robuste: la couche appelante reçoit toujours un objet Prediction.
-            return List.of(new Prediction("", "", ""));
+            return null;
         }
     }
 

@@ -19,6 +19,7 @@ public class ClientWebAstroNet extends ClientWebAbstrait {
 
     /**
      * Constructeur injectable.
+     * @param httpClient
      */
     public ClientWebAstroNet(HttpClient httpClient) {
         super(httpClient);
@@ -26,6 +27,9 @@ public class ClientWebAstroNet extends ClientWebAbstrait {
 
     /**
      * Appelle AstroNet pour récupérer un profil astral.
+     * @param prenom
+     * @param dateNaissance
+     * @return 
      */
     public JsonObject recupererProfilAstral(String prenom, LocalDate dateNaissance) {
         return appelerApi(
@@ -37,6 +41,12 @@ public class ClientWebAstroNet extends ClientWebAbstrait {
 
     /**
      * Appelle AstroNet pour récupérer les prédictions amour/santé/travail.
+     * @param couleur
+     * @param animal
+     * @param niveauAmour
+     * @param niveauSante
+     * @param niveauTravail
+     * @return 
      */
     public JsonObject recupererPredictions(String couleur, String animal, int niveauAmour, int niveauSante, int niveauTravail) {
         return appelerApi(
@@ -51,6 +61,9 @@ public class ClientWebAstroNet extends ClientWebAbstrait {
 
     /**
      * Point d'appel générique AstroNet.
+     * @param service
+     * @param parametresCleValeur
+     * @return 
      */
     public JsonObject recupererAstroNetData(String service, String... parametresCleValeur) {
         if (service == null || service.isBlank()) {

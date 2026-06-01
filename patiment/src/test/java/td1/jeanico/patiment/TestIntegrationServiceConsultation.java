@@ -33,10 +33,10 @@ class TestIntegrationServiceConsultation extends TestIntegrationAbstrait {
     // Comportement attendu: la consultation est creee pour un employe disponible et de genre compatible avec le medium choisi.
     @Test
     void demanderConsultationAffecteUnEmployeEligible() {
-        Client client = creerClient("alice@predictif.fr", Genre.F);
-        Medium medium = creerMedium("Mme Irma", Genre.F);
-        Employe employeCompatible = creerEmploye("anna@predictif.fr", Genre.F, true);
-        creerEmploye("bruno@predictif.fr", Genre.H, true);
+        Client client = creerClient("alice@predictif.fr", Genre.FEMME);
+        Medium medium = creerMedium("Mme Irma", Genre.FEMME);
+        Employe employeCompatible = creerEmploye("anna@predictif.fr", Genre.FEMME, true);
+        creerEmploye("bruno@predictif.fr", Genre.HOMME, true);
         ConsultationService consultationService = creerService();
 
         boolean consultationCreee = consultationService.demanderConsultation(client, medium);
@@ -53,11 +53,11 @@ class TestIntegrationServiceConsultation extends TestIntegrationAbstrait {
     // Comportement attendu: l'employe ayant le moins de consultations historiques est selectionne.
     @Test
     void demanderConsultationChoisitLEmployeLeMoinsCharge() {
-        Client client = creerClient("alice@predictif.fr", Genre.F);
-        Client autreClient = creerClient("zoe@predictif.fr", Genre.F);
-        Medium medium = creerMedium("Mme Irma", Genre.F);
-        Employe anna = creerEmploye("anna@predictif.fr", Genre.F, true);
-        Employe claire = creerEmploye("claire@predictif.fr", Genre.F, true);
+        Client client = creerClient("alice@predictif.fr", Genre.FEMME);
+        Client autreClient = creerClient("zoe@predictif.fr", Genre.FEMME);
+        Medium medium = creerMedium("Mme Irma", Genre.FEMME);
+        Employe anna = creerEmploye("anna@predictif.fr", Genre.FEMME, true);
+        Employe claire = creerEmploye("claire@predictif.fr", Genre.FEMME, true);
         creerConsultation(autreClient, anna, medium, true);
         ConsultationService consultationService = creerService();
 
@@ -72,10 +72,10 @@ class TestIntegrationServiceConsultation extends TestIntegrationAbstrait {
     // Comportement attendu: la demande est rejetee lorsqu'aucun employe disponible et compatible n'existe.
     @Test
     void demanderConsultationRefuseQuandAucunEmployeEligibleNestDisponible() {
-        Client client = creerClient("alice@predictif.fr", Genre.F);
-        Medium medium = creerMedium("Mme Irma", Genre.F);
-        creerEmploye("bruno@predictif.fr", Genre.H, true);
-        creerEmploye("anna@predictif.fr", Genre.F, false);
+        Client client = creerClient("alice@predictif.fr", Genre.FEMME);
+        Medium medium = creerMedium("Mme Irma", Genre.FEMME);
+        creerEmploye("bruno@predictif.fr", Genre.HOMME, true);
+        creerEmploye("anna@predictif.fr", Genre.FEMME, false);
         ConsultationService consultationService = creerService();
 
         boolean consultationCreee = consultationService.demanderConsultation(client, medium);
@@ -88,9 +88,9 @@ class TestIntegrationServiceConsultation extends TestIntegrationAbstrait {
     // Comportement attendu: la consultation non terminee de l'employe est retrouvee depuis le service.
     @Test
     void consulterConsultationAffecteeRetourneLaConsultationEnCours() {
-        Client client = creerClient("alice@predictif.fr", Genre.F);
-        Medium medium = creerMedium("Mme Irma", Genre.F);
-        Employe employe = creerEmploye("anna@predictif.fr", Genre.F, false);
+        Client client = creerClient("alice@predictif.fr", Genre.FEMME);
+        Medium medium = creerMedium("Mme Irma", Genre.FEMME);
+        Employe employe = creerEmploye("anna@predictif.fr", Genre.FEMME, false);
         Consultation consultation = creerConsultation(client, employe, medium, false);
         ConsultationService consultationService = creerService();
 
@@ -104,9 +104,9 @@ class TestIntegrationServiceConsultation extends TestIntegrationAbstrait {
     // Comportement attendu: la consultation est marquee terminee, le commentaire est sauvegarde et l'employe redevient disponible.
     @Test
     void terminerConsultationClotureLaConsultationEtLibereLEmploye() {
-        Client client = creerClient("alice@predictif.fr", Genre.F);
-        Medium medium = creerMedium("Mme Irma", Genre.F);
-        Employe employe = creerEmploye("anna@predictif.fr", Genre.F, false);
+        Client client = creerClient("alice@predictif.fr", Genre.FEMME);
+        Medium medium = creerMedium("Mme Irma", Genre.FEMME);
+        Employe employe = creerEmploye("anna@predictif.fr", Genre.FEMME, false);
         Consultation consultation = creerConsultation(client, employe, medium, false);
         ConsultationService consultationService = creerService();
 

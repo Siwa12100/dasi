@@ -106,7 +106,7 @@ class TestIntegrationServiceClient extends TestIntegrationAbstrait {
                 mail,
                 "secret",
                 "0601020304",
-                Genre.F,
+                Genre.FEMME,
                 new Adresse("12", "rue des Etoiles", "69001", "69", "Lyon"),
                 LocalDate.of(1992, 4, 14)
         );

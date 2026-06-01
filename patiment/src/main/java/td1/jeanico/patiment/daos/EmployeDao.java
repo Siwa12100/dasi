@@ -16,12 +16,6 @@ public class EmployeDao {
         return em.merge(employe);
     }
 
-    public void supprimer(Employe employe) {
-        EntityManager em = JpaUtil.obtenirContextePersistance();
-        Employe employeGere = em.contains(employe) ? employe : em.merge(employe);
-        em.remove(employeGere);
-    }
-
     public Employe trouverParId(Long id) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.find(Employe.class, id);

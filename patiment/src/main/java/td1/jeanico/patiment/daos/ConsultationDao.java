@@ -18,12 +18,6 @@ public class ConsultationDao {
         return em.merge(consultation);
     }
 
-    public void supprimer(Consultation consultation) {
-        EntityManager em = JpaUtil.obtenirContextePersistance();
-        Consultation consultationGeree = em.contains(consultation) ? consultation : em.merge(consultation);
-        em.remove(consultationGeree);
-    }
-
     public Consultation trouverParId(Long id) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.find(Consultation.class, id);
@@ -43,15 +37,6 @@ public class ConsultationDao {
                 "SELECT c FROM Consultation c WHERE c.client = :client ORDER BY c.date DESC",
                 Consultation.class
         ).setParameter("client", client)
-                .getResultList();
-    }
-
-    public List<Consultation> trouverParEmploye(Employe employe) {
-        EntityManager em = JpaUtil.obtenirContextePersistance();
-        return em.createQuery(
-                "SELECT c FROM Consultation c WHERE c.employe = :employe ORDER BY c.date DESC",
-                Consultation.class
-        ).setParameter("employe", employe)
                 .getResultList();
     }
 

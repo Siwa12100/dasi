@@ -1,14 +1,14 @@
 package td1.jeanico.patiment;
 
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import td1.jeanico.patiment.modeles.clients.ProfilAstral;
 import td1.jeanico.patiment.modeles.consultations.Prediction;
 import td1.jeanico.patiment.services.PredictionService;
 import td1.jeanico.patiment.webClients.ClientWebAstroNet;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TestIntegrationServicePrediction extends TestIntegrationAbstrait {
@@ -19,20 +19,20 @@ class TestIntegrationServicePrediction extends TestIntegrationAbstrait {
     void demandeInspirationUtiliseLeProfilAstralEtRetourneUnePrediction() {
         PredictionService predictionService = new PredictionService(new ClientWebAstroNet());
 
-        List<Prediction> predictions = predictionService.demandeInspiration(
+        Prediction prediction = predictionService.demandeInspiration(
                 new ProfilAstral("Loup", "Taureau", "Bleu", "Singe"),
                 2,
                 3,
                 4
         );
 
-        assertEquals(1, predictions.size());
-        assertFalse(predictions.get(0).getAmour().isBlank());
-        assertFalse(predictions.get(0).getSante().isBlank());
-        assertFalse(predictions.get(0).getTravail().isBlank());
-        assertTrue(predictions.get(0).getAmour().contains("Signe antagoniste:"));
-        assertTrue(predictions.get(0).getSante().contains("Conseil:"));
-        assertTrue(predictions.get(0).getTravail().contains("Signe collaborateur:"));
+        assertNotNull(prediction);
+        assertFalse(prediction.getAmour().isBlank());
+        assertFalse(prediction.getSante().isBlank());
+        assertFalse(prediction.getTravail().isBlank());
+        assertTrue(prediction.getAmour().contains("Signe antagoniste:"));
+        assertTrue(prediction.getSante().contains("Conseil:"));
+        assertTrue(prediction.getTravail().contains("Signe collaborateur:"));
     }
 
     // Fonctionnalite metier testee: rejet d'une demande d'inspiration avec des scores hors bornes.
@@ -41,17 +41,14 @@ class TestIntegrationServicePrediction extends TestIntegrationAbstrait {
     void demandeInspirationRefuseLesScoresHorsBornes() {
         PredictionService predictionService = new PredictionService(new ClientWebAstroNet());
 
-        List<Prediction> predictions = predictionService.demandeInspiration(
+        Prediction prediction = predictionService.demandeInspiration(
                 new ProfilAstral("Loup", "Taureau", "Bleu", "Singe"),
                 0,
                 5,
                 2
         );
 
-        assertEquals(1, predictions.size());
-        assertEquals("", predictions.get(0).getAmour());
-        assertEquals("", predictions.get(0).getSante());
-        assertEquals("", predictions.get(0).getTravail());
+        assertNull(prediction);
     }
 
     // Fonctionnalite metier testee: rejet d'une demande d'inspiration si le profil astral est incomplet.
@@ -60,14 +57,13 @@ class TestIntegrationServicePrediction extends TestIntegrationAbstrait {
     void demandeInspirationRefuseUnProfilAstralIncomplet() {
         PredictionService predictionService = new PredictionService(new ClientWebAstroNet());
 
-        List<Prediction> predictions = predictionService.demandeInspiration(
+        Prediction prediction = predictionService.demandeInspiration(
                 new ProfilAstral("Loup", "Taureau", "", "Singe"),
                 2,
                 3,
                 4
         );
 
-        assertEquals(1, predictions.size());
-        assertEquals("", predictions.get(0).getAmour());
+        assertNull(prediction);
     }
 }

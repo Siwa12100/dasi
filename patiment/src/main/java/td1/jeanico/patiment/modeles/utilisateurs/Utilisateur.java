@@ -22,6 +22,7 @@ public abstract class Utilisateur implements Serializable {
 
     @Column(nullable = false, unique = true)
     protected String mail;
+    
     protected String prenom;
     protected String nom;
     protected String motDePasse;

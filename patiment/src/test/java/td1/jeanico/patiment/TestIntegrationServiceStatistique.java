@@ -32,10 +32,10 @@ class TestIntegrationServiceStatistique extends TestIntegrationAbstrait {
     // Comportement attendu: le service compte les consultations de chaque medium et conserve aussi les mediums sans consultation a zero.
     @Test
     void listerNombreConsultationsParMediumCompteLesConsultationsEtGardeLesZeros() {
-        Medium mediumA = creerMedium("Mme Irma", Genre.F);
-        Medium mediumB = creerMedium("Professeur Ombre", Genre.H);
-        Employe employe = creerEmploye("anna@predictif.fr", Genre.F);
-        Client client = creerClient("alice@predictif.fr", Genre.F, "69");
+        Medium mediumA = creerMedium("Mme Irma", Genre.FEMME);
+        Medium mediumB = creerMedium("Professeur Ombre", Genre.HOMME);
+        Employe employe = creerEmploye("anna@predictif.fr", Genre.FEMME);
+        Client client = creerClient("alice@predictif.fr", Genre.FEMME, "69");
         creerConsultation(client, employe, mediumA);
         StatistiqueService statistiqueService = creerService();
 
@@ -49,10 +49,10 @@ class TestIntegrationServiceStatistique extends TestIntegrationAbstrait {
     // Comportement attendu: plusieurs consultations du meme client avec le meme employe ne comptent qu'une seule fois.
     @Test
     void listerRepartitionClientParEmployeCompteLesClientsDistincts() {
-        Medium medium = creerMedium("Mme Irma", Genre.F);
-        Employe employe = creerEmploye("anna@predictif.fr", Genre.F);
-        Client alice = creerClient("alice@predictif.fr", Genre.F, "69");
-        Client zoe = creerClient("zoe@predictif.fr", Genre.F, "69");
+        Medium medium = creerMedium("Mme Irma", Genre.FEMME);
+        Employe employe = creerEmploye("anna@predictif.fr", Genre.FEMME);
+        Client alice = creerClient("alice@predictif.fr", Genre.FEMME, "69");
+        Client zoe = creerClient("zoe@predictif.fr", Genre.FEMME, "69");
         creerConsultation(alice, employe, medium);
         creerConsultation(alice, employe, medium);
         creerConsultation(zoe, employe, medium);
@@ -67,11 +67,11 @@ class TestIntegrationServiceStatistique extends TestIntegrationAbstrait {
     // Comportement attendu: les mediums sont tries par nombre de consultations decroissant.
     @Test
     void listerMediumsPopulaireTrieLesMediumsParVolumeDeConsultations() {
-        Medium mediumA = creerMedium("Mme Irma", Genre.F);
-        Medium mediumB = creerMedium("Professeur Ombre", Genre.H);
-        Employe employe = creerEmploye("anna@predictif.fr", Genre.F);
-        Client alice = creerClient("alice@predictif.fr", Genre.F, "69");
-        Client zoe = creerClient("zoe@predictif.fr", Genre.F, "01");
+        Medium mediumA = creerMedium("Mme Irma", Genre.FEMME);
+        Medium mediumB = creerMedium("Professeur Ombre", Genre.HOMME);
+        Employe employe = creerEmploye("anna@predictif.fr", Genre.FEMME);
+        Client alice = creerClient("alice@predictif.fr", Genre.FEMME, "69");
+        Client zoe = creerClient("zoe@predictif.fr", Genre.FEMME, "01");
         creerConsultation(alice, employe, mediumA);
         creerConsultation(zoe, employe, mediumA);
         creerConsultation(alice, employe, mediumB);
@@ -89,9 +89,9 @@ class TestIntegrationServiceStatistique extends TestIntegrationAbstrait {
     // Comportement attendu: les clients sont regroupes par code departement et comptes correctement.
     @Test
     void listerRepartitionGeographiqueClientsCompteLesClientsParDepartement() {
-        creerClient("alice@predictif.fr", Genre.F, "69");
-        creerClient("zoe@predictif.fr", Genre.F, "69");
-        creerClient("tom@predictif.fr", Genre.H, "01");
+        creerClient("alice@predictif.fr", Genre.FEMME, "69");
+        creerClient("zoe@predictif.fr", Genre.FEMME, "69");
+        creerClient("tom@predictif.fr", Genre.HOMME, "01");
         StatistiqueService statistiqueService = creerService();
 
         Map<String, Integer> repartition = statistiqueService.listerRepartitionGeographiqueClients();

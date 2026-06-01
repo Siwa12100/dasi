@@ -27,6 +27,8 @@ public class ClientService extends SupportPersistance {
 
     /**
      * Constructeur injectable pour les tests et la configuration avancée.
+     * @param clientDao
+     * @param astroNetWebClient
      */
     public ClientService(ClientDao clientDao, ClientWebAstroNet astroNetWebClient) {
         this.clientDao = clientDao;
@@ -36,6 +38,8 @@ public class ClientService extends SupportPersistance {
     /**
      * Inscrit un client si ses données sont valides et si son e-mail est unique.
      * Le profil astral est demandé à AstroNet puis persisté avec le client.
+     * @param client
+     * @return 
      */
     public boolean inscrire(Client client) {
         if (!aInformationsInscriptionValides(client)) {
@@ -83,6 +87,9 @@ public class ClientService extends SupportPersistance {
     /**
      * Authentifie un client par couple mail/mot de passe.
      * Retourne null si les entrées sont vides ou inconnues.
+     * @param mail
+     * @param motDePasse
+     * @return 
      */
     public Client authentifier(String mail, String motDePasse) {
         if (estVide(mail) || estVide(motDePasse)) {
@@ -94,6 +101,8 @@ public class ClientService extends SupportPersistance {
     /**
      * Retourne le profil astral d'un client.
      * Si absent en base, il est récupéré via AstroNet puis sauvegardé.
+     * @param client
+     * @return 
      */
     public ProfilAstral consulterProfilAstral(Client client) {
         if (client == null) {
@@ -130,6 +139,8 @@ public class ClientService extends SupportPersistance {
 
     /**
      * Recharge le client depuis la base avec les données persistées les plus récentes.
+     * @param client
+     * @return 
      */
     public Client consulterProfilClient(Client client) {
         if (client == null) {
@@ -140,6 +151,8 @@ public class ClientService extends SupportPersistance {
 
     /**
      * Recherche un client par identifiant technique.
+     * @param id
+     * @return 
      */
     public Client recupererClientParId(Long id) {
         if (id == null) {

@@ -8,6 +8,9 @@ public abstract class SupportPersistance {
     /**
      * Exécute une action en lecture seule avec un contexte de persistance.
      * Si un contexte existe déjà (appel imbriqué), il est réutilisé.
+     * @param <T>
+     * @param action
+     * @return 
      */
     protected <T> T executerLecture(Supplier<T> action) {
         boolean contexteExistant = JpaUtil.contextePersistanceDisponible();
@@ -25,6 +28,7 @@ public abstract class SupportPersistance {
 
     /**
      * Variante utilitaire pour les lectures sans valeur de retour.
+     * @param action
      */
     protected void executerLecture(Runnable action) {
         executerLecture(() -> {
@@ -36,6 +40,9 @@ public abstract class SupportPersistance {
     /**
      * Exécute une action transactionnelle (begin/commit/rollback).
      * En cas d'erreur, la transaction est annulée puis l'exception remontée.
+     * @param <T>
+     * @param action
+     * @return 
      */
     protected <T> T executerEnTransaction(Supplier<T> action) {
         boolean contexteExistant = JpaUtil.contextePersistanceDisponible();
@@ -60,6 +67,7 @@ public abstract class SupportPersistance {
 
     /**
      * Variante utilitaire pour les transactions sans valeur de retour.
+     * @param action
      */
     protected void executerEnTransaction(Runnable action) {
         executerEnTransaction(() -> {

@@ -37,7 +37,7 @@ class TestIntegrationServiceMedium extends TestIntegrationAbstrait {
     @Test
     void recupererMediumParIdRetourneLeMediumPersistant() {
         Medium medium = executerEnTransaction(() -> {
-            Medium mediumPersistant = new Spirite("Mme Irma", Genre.F, "Voyance spirite", "Boule");
+            Medium mediumPersistant = new Spirite("Mme Irma", Genre.FEMME, "Voyance spirite", "Boule");
             mediumDao.creer(mediumPersistant);
             return mediumPersistant;
         });
@@ -51,9 +51,9 @@ class TestIntegrationServiceMedium extends TestIntegrationAbstrait {
 
     private void creerJeuDeMediums() {
         executerEnTransaction(() -> {
-            mediumDao.creer(new Spirite("Mme Irma", Genre.F, "Voyance spirite", "Boule"));
-            mediumDao.creer(new Cartomancien("Maitre Soleil", Genre.H, "Cartes et tirages"));
-            mediumDao.creer(new Astrologue("Cassandre Vega", Genre.F, "Theme astral", "ENS Astro", "2015"));
+            mediumDao.creer(new Spirite("Mme Irma", Genre.FEMME, "Voyance spirite", "Boule"));
+            mediumDao.creer(new Cartomancien("Maitre Soleil", Genre.HOMME, "Cartes et tirages"));
+            mediumDao.creer(new Astrologue("Cassandre Vega", Genre.FEMME, "Theme astral", "ENS Astro", "2015"));
             return null;
         });
     }

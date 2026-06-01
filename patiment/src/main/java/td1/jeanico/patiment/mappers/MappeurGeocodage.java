@@ -14,6 +14,8 @@ public final class MappeurGeocodage {
      * Extrait une {@link Adresse} depuis une réponse GeoJSON FeatureCollection
      * renvoyée par l'API de géocodage.
      * Retourne {@code null} si aucun résultat n'est trouvé dans la réponse.
+     * @param json
+     * @return 
      */
     public static Adresse versAdresse(JsonObject json) {
         if (json == null || json.isEmpty()) {

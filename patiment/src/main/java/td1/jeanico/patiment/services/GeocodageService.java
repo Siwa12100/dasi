@@ -18,6 +18,7 @@ public class GeocodageService {
 
     /**
      * Constructeur injectable.
+     * @param geocodageWebClient
      */
     public GeocodageService(ClientWebGeocodage geocodageWebClient) {
         this.geocodageWebClient = geocodageWebClient;
@@ -26,6 +27,8 @@ public class GeocodageService {
     /**
      * Recherche et retourne une {@link Adresse} normalisée à partir d'un libellé
      * d'adresse en texte libre. Retourne {@code null} si aucun résultat n'est trouvé.
+     * @param libelleAdresse
+     * @return 
      */
     public Adresse rechercherAdresse(String libelleAdresse) {
         if (libelleAdresse == null || libelleAdresse.isBlank()) {

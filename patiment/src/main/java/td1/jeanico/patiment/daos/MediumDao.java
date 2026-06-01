@@ -14,17 +14,6 @@ public class MediumDao {
         em.persist(medium);
     }
 
-    public Medium mettreAJour(Medium medium) {
-        EntityManager em = JpaUtil.obtenirContextePersistance();
-        return em.merge(medium);
-    }
-
-    public void supprimer(Medium medium) {
-        EntityManager em = JpaUtil.obtenirContextePersistance();
-        Medium mediumGere = em.contains(medium) ? medium : em.merge(medium);
-        em.remove(mediumGere);
-    }
-
     public Medium trouverParId(Long id) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.find(Medium.class, id);

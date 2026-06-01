@@ -16,6 +16,7 @@ public class ClientWebGeocodage extends ClientWebAbstrait {
 
     /**
      * Constructeur injectable.
+     * @param httpClient
      */
     public ClientWebGeocodage(HttpClient httpClient) {
         super(httpClient);
@@ -23,6 +24,8 @@ public class ClientWebGeocodage extends ClientWebAbstrait {
 
     /**
      * Interroge l'API de géocodage et retourne le premier résultat JSON.
+     * @param libelleAdresse
+     * @return 
      */
     public JsonObject rechercherAdresse(String libelleAdresse) {
         if (libelleAdresse == null || libelleAdresse.isBlank()) {
