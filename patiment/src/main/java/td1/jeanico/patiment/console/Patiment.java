@@ -34,6 +34,8 @@ public class Patiment {
             default:
                 System.out.println("Choix de lancement invalide."); 
         }
+
+        JpaUtil.fermerFabriquePersistance();
     }   
 
     public static void lancerApplication() {
