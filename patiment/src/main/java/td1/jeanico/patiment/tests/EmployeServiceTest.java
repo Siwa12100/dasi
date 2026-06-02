@@ -1,22 +1,16 @@
 package td1.jeanico.patiment.tests;
 
 import java.util.List;
-import java.util.function.Supplier;
-import td1.jeanico.patiment.daos.EmployeDao;
 import td1.jeanico.patiment.modeles.utilisateurs.Employe;
-import td1.jeanico.patiment.modeles.utilisateurs.Genre;
-import td1.jeanico.patiment.outils.SupportPersistance;
 import td1.jeanico.patiment.services.EmployeService;
 
 public class EmployeServiceTest {
 
+    private static final String MAIL_EMPLOYE_INITIALISE = "anna@predictif.fr";
+
     private static int nbTests = 0;
     private static int nbSucces = 0;
-    private static int sequenceMail = 1;
-
     private static EmployeService employeService;
-    private static final EmployeDao employeDao = new EmployeDao();
-    private static final PersistanceTestHelper persistanceHelper = new PersistanceTestHelper();
 
     private EmployeServiceTest() {
     }
@@ -24,7 +18,6 @@ public class EmployeServiceTest {
     public static void lancerTestsEmployeService() {
         nbTests = 0;
         nbSucces = 0;
-        sequenceMail = 1;
         employeService = new EmployeService();
 
         System.out.println("\n=== Lancement des tests console de EmployeService ===");
@@ -55,15 +48,18 @@ public class EmployeServiceTest {
     }
 
     public static void test_RecupererEmployeParId_Valide() {
-        System.out.println("Test : Recuperer un employe par son id");
+        System.out.println("Test : Recuperer un employe initialise en BDD par son id");
 
-        Employe cree = employePersistant("recup", Genre.NON_SPECIFIE, true);
+        Employe employeInitialise = employeInitialise();
+        verifier("prerequis : employe initialise retrouve", employeInitialise != null);
 
-        Employe resultat = employeService.recupererEmployeParId(cree.getId());
+        if (employeInitialise != null) {
+            Employe resultat = employeService.recupererEmployeParId(employeInitialise.getId());
 
-        verifier("employe recupere non nul", resultat != null);
-        verifier("id recupere correct", resultat != null && cree.getId().equals(resultat.getId()));
-        verifier("mail recupere correct", resultat != null && cree.getMail().equalsIgnoreCase(resultat.getMail()));
+            verifier("employe recupere non nul", resultat != null);
+            verifier("id recupere correct", resultat != null && employeInitialise.getId().equals(resultat.getId()));
+            verifier("mail recupere correct", resultat != null && employeInitialise.getMail().equalsIgnoreCase(resultat.getMail()));
+        }
     }
 
     public static void test_ListerEmployes_RetourneListeNonNulle() {
@@ -75,36 +71,25 @@ public class EmployeServiceTest {
     }
 
     public static void test_ListerEmployes_ContientEmployeCree() {
-        System.out.println("Test : La liste des employes contient l'employe cree");
+        System.out.println("Test : La liste des employes contient un employe initialise en BDD");
 
-        Employe cree = employePersistant("liste", Genre.HOMME, true);
+        Employe employeInitialise = employeInitialise();
         List<Employe> resultat = employeService.listerEmployes();
 
         boolean contient = resultat != null
-                && resultat.stream().anyMatch(e -> e.getId() != null && e.getId().equals(cree.getId()));
+                && employeInitialise != null
+                && resultat.stream().anyMatch(e -> e.getId() != null && e.getId().equals(employeInitialise.getId()));
 
+        verifier("prerequis : employe initialise retrouve", employeInitialise != null);
         verifier("liste retournee non nulle", resultat != null);
-        verifier("liste contient l'employe cree", contient);
+        verifier("liste contient l'employe initialise", contient);
     }
 
-    private static Employe employePersistant(String prefixe, Genre genre, boolean disponible) {
-        return persistanceHelper.transaction(() -> {
-            Employe employe = new Employe(
-                    mailUnique(prefixe),
-                    "Prenom" + sequenceMail,
-                    "Nom" + sequenceMail,
-                    "motdepasse",
-                    "070000000" + (sequenceMail % 10),
-                    genre,
-                    disponible
-            );
-            employeDao.creer(employe);
-            return employe;
-        });
-    }
-
-    private static String mailUnique(String prefixe) {
-        return prefixe + "." + System.currentTimeMillis() + "." + (sequenceMail++) + "@test.fr";
+    private static Employe employeInitialise() {
+        return employeService.listerEmployes().stream()
+                .filter(e -> e.getMail() != null && MAIL_EMPLOYE_INITIALISE.equalsIgnoreCase(e.getMail()))
+                .findFirst()
+                .orElse(null);
     }
 
     private static void verifier(String message, boolean condition) {
@@ -117,10 +102,4 @@ public class EmployeServiceTest {
         }
     }
 
-    private static final class PersistanceTestHelper extends SupportPersistance {
-
-        private <T> T transaction(Supplier<T> action) {
-            return executerEnTransaction(action);
-        }
-    }
 }

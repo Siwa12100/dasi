@@ -1,27 +1,26 @@
 package td1.jeanico.patiment.tests;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Supplier;
 import td1.jeanico.patiment.daos.ClientDao;
 import td1.jeanico.patiment.daos.EmployeDao;
 import td1.jeanico.patiment.daos.MediumDao;
-import td1.jeanico.patiment.modeles.clients.Adresse;
 import td1.jeanico.patiment.modeles.consultations.Consultation;
-import td1.jeanico.patiment.modeles.mediums.Cartomancien;
 import td1.jeanico.patiment.modeles.mediums.Medium;
 import td1.jeanico.patiment.modeles.utilisateurs.Client;
 import td1.jeanico.patiment.modeles.utilisateurs.Employe;
-import td1.jeanico.patiment.modeles.utilisateurs.Genre;
 import td1.jeanico.patiment.outils.SupportPersistance;
 import td1.jeanico.patiment.services.ConsultationService;
 
 public class ConsultationServiceTest {
 
+    private static final String MAIL_CLIENT_CONSULT = "arthur@free.fr";
+    private static final String MAIL_CLIENT_SANS_CONSULT = "robin@orange.fr";
+    private static final String MAIL_CLIENT_HISTO = "maxime@sfr.fr";
+    private static final String DENOMINATION_MEDIUM_INITIALISE = "Mlle Arcane";
+
     private static int nbTests = 0;
     private static int nbSucces = 0;
-    private static int sequenceMail = 1;
-
     private static ConsultationService consultationService;
     private static final ClientDao clientDao = new ClientDao();
     private static final EmployeDao employeDao = new EmployeDao();
@@ -34,7 +33,6 @@ public class ConsultationServiceTest {
     public static void lancerTestsConsultationService() {
         nbTests = 0;
         nbSucces = 0;
-        sequenceMail = 1;
         consultationService = new ConsultationService();
 
         System.out.println("\n=== Lancement des tests console de ConsultationService ===");
@@ -65,39 +63,52 @@ public class ConsultationServiceTest {
     public static void test_DemanderConsultation_ClientNull() {
         System.out.println("Test : Refuser une demande de consultation si le client est null");
 
-        Medium medium = mediumPersistant(Genre.NON_SPECIFIE);
-        boolean resultat = consultationService.demanderConsultation(null, medium);
+        Medium medium = mediumInitialise();
+        verifier("prerequis : medium initialise retrouve", medium != null);
 
-        verifier("retourne false si client null", !resultat);
+        if (medium != null) {
+            assurerEmployeCompatibleDisponible(medium);
+            boolean resultat = consultationService.demanderConsultation(null, medium);
+
+            verifier("retourne false si client null", !resultat);
+        }
     }
 
     public static void test_DemanderConsultation_MediumNull() {
         System.out.println("Test : Refuser une demande de consultation si le medium est null");
 
-        Client client = clientPersistant("consult");
+        Client client = clientInitialise(MAIL_CLIENT_CONSULT);
+        verifier("prerequis : client initialise retrouve", client != null);
 
-        boolean resultat = consultationService.demanderConsultation(client, null);
+        if (client != null) {
+            boolean resultat = consultationService.demanderConsultation(client, null);
 
-        verifier("retourne false si medium null", !resultat);
+            verifier("retourne false si medium null", !resultat);
+        }
     }
 
     public static void test_DemanderConsultation_Valide() {
-        System.out.println("Test : Creer une consultation avec un client et un medium valides");
+        System.out.println("Test : Creer une consultation avec un client et un medium initialises en BDD");
 
-        Client client = clientPersistant("consult");
-        Medium medium = mediumPersistant(Genre.NON_SPECIFIE);
+        Client client = clientInitialise(MAIL_CLIENT_CONSULT);
+        Medium medium = mediumInitialise();
+        verifier("prerequis : client initialise retrouve", client != null);
+        verifier("prerequis : medium initialise retrouve", medium != null);
 
-        boolean resultat = consultationService.demanderConsultation(client, medium);
-        List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
-        Consultation creee = (historique == null || historique.isEmpty()) ? null : historique.get(0);
-        Employe employeAffecte = creee == null ? null : persistanceHelper.lecture(() -> employeDao.trouverParId(creee.getEmploye().getId()));
+        if (client != null && medium != null) {
+            assurerEmployeCompatibleDisponible(medium);
+            boolean resultat = consultationService.demanderConsultation(client, medium);
+            List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
+            Consultation creee = (historique == null || historique.isEmpty()) ? null : historique.get(0);
+            Employe employeAffecte = creee == null ? null : persistanceHelper.lecture(() -> employeDao.trouverParId(creee.getEmploye().getId()));
 
-        verifier("retourne true", resultat);
-        verifier("consultation persistée", creee != null);
-        verifier("consultation active a la creation", creee != null && !creee.isEstTermine());
-        verifier("medium associe correct", creee != null && creee.getMedium() != null
-                && medium.getId().equals(creee.getMedium().getId()));
-        verifier("employe marque indisponible", employeAffecte != null && !employeAffecte.isEstDisponible());
+            verifier("retourne true", resultat);
+            verifier("consultation persistee", creee != null);
+            verifier("consultation active a la creation", creee != null && !creee.isEstTermine());
+            verifier("medium associe correct", creee != null && creee.getMedium() != null
+                    && medium.getId().equals(creee.getMedium().getId()));
+            verifier("employe marque indisponible", employeAffecte != null && !employeAffecte.isEstDisponible());
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -114,28 +125,37 @@ public class ConsultationServiceTest {
     }
 
     public static void test_ConsulterHistorique_ClientSansConsultation() {
-        System.out.println("Test : Retourner une liste vide pour un client sans consultation");
+        System.out.println("Test : Retourner une liste vide pour un client initialise sans consultation");
 
-        Client client = clientPersistant("histo");
+        Client client = clientInitialiseSansConsultation();
+        verifier("prerequis : client initialise retrouve", client != null);
 
-        List<Consultation> resultat = consultationService.consulterHistoriqueConsultations(client);
+        if (client != null) {
+            List<Consultation> resultat = consultationService.consulterHistoriqueConsultations(client);
 
-        verifier("liste retournee non nulle", resultat != null);
-        verifier("liste vide pour nouveau client", resultat != null && resultat.isEmpty());
+            verifier("liste retournee non nulle", resultat != null);
+            verifier("liste vide pour client initialise sans consultation", resultat != null && resultat.isEmpty());
+        }
     }
 
     public static void test_ConsulterHistorique_ClientAvecConsultation() {
-        System.out.println("Test : Retourner les consultations d'un client ayant une demande");
+        System.out.println("Test : Retourner les consultations d'un client initialise ayant une demande");
 
-        Client client = clientPersistant("histo");
-        Medium medium = mediumPersistant(Genre.NON_SPECIFIE);
-        boolean demande = consultationService.demanderConsultation(client, medium);
+        Client client = clientInitialise(MAIL_CLIENT_HISTO);
+        Medium medium = mediumInitialise();
+        verifier("prerequis : client initialise retrouve", client != null);
+        verifier("prerequis : medium initialise retrouve", medium != null);
 
-        List<Consultation> resultat = consultationService.consulterHistoriqueConsultations(client);
+        if (client != null && medium != null) {
+            assurerEmployeCompatibleDisponible(medium);
+            boolean demande = consultationService.demanderConsultation(client, medium);
 
-        verifier("demande prealable reussie", demande);
-        verifier("historique non nul", resultat != null);
-        verifier("historique contient au moins une consultation", resultat != null && !resultat.isEmpty());
+            List<Consultation> resultat = consultationService.consulterHistoriqueConsultations(client);
+
+            verifier("demande prealable reussie", demande);
+            verifier("historique non nul", resultat != null);
+            verifier("historique contient au moins une consultation", resultat != null && !resultat.isEmpty());
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -156,47 +176,59 @@ public class ConsultationServiceTest {
     public static void test_DeclarerPret_ConsultationTerminee() {
         System.out.println("Test : Ne rien faire si la consultation est deja terminee");
 
-        Client client = clientPersistant("pret");
-        Medium medium = mediumPersistant(Genre.NON_SPECIFIE);
-        consultationService.demanderConsultation(client, medium);
+        Client client = clientInitialise(MAIL_CLIENT_CONSULT);
+        Medium medium = mediumInitialise();
+        verifier("prerequis : client initialise retrouve", client != null);
+        verifier("prerequis : medium initialise retrouve", medium != null);
 
-        List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
-        boolean prerequis = historique != null && !historique.isEmpty();
+        if (client != null && medium != null) {
+            assurerEmployeCompatibleDisponible(medium);
+            consultationService.demanderConsultation(client, medium);
 
-        if (prerequis) {
-            Consultation consultation = historique.get(0);
-            consultationService.terminerConsultation(consultation, "terminee");
-            try {
-                consultationService.declarerPret(consultation);
-                verifier("aucune exception levee sur consultation terminee", true);
-            } catch (Exception e) {
-                verifier("aucune exception levee sur consultation terminee", false);
+            List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
+            boolean prerequis = historique != null && !historique.isEmpty();
+
+            if (prerequis) {
+                Consultation consultation = historique.get(0);
+                consultationService.terminerConsultation(consultation, "terminee");
+                try {
+                    consultationService.declarerPret(consultation);
+                    verifier("aucune exception levee sur consultation terminee", true);
+                } catch (Exception e) {
+                    verifier("aucune exception levee sur consultation terminee", false);
+                }
+            } else {
+                verifier("prerequis : consultation existante trouvee", false);
             }
-        } else {
-            verifier("prerequis : consultation existante trouvee", false);
         }
     }
 
     public static void test_DeclarerPret_Valide() {
         System.out.println("Test : Declarer pret sur une consultation active");
 
-        Client client = clientPersistant("pret");
-        Medium medium = mediumPersistant(Genre.NON_SPECIFIE);
-        boolean demande = consultationService.demanderConsultation(client, medium);
+        Client client = clientInitialise(MAIL_CLIENT_CONSULT);
+        Medium medium = mediumInitialise();
+        verifier("prerequis : client initialise retrouve", client != null);
+        verifier("prerequis : medium initialise retrouve", medium != null);
 
-        List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
-        boolean prerequis = demande && historique != null && !historique.isEmpty();
+        if (client != null && medium != null) {
+            assurerEmployeCompatibleDisponible(medium);
+            boolean demande = consultationService.demanderConsultation(client, medium);
 
-        verifier("demande prealable reussie", demande);
-        verifier("consultation trouvee dans historique", prerequis);
+            List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
+            boolean prerequis = demande && historique != null && !historique.isEmpty();
 
-        if (prerequis) {
-            Consultation consultation = historique.get(0);
-            try {
-                consultationService.declarerPret(consultation);
-                verifier("aucune exception levee", true);
-            } catch (Exception e) {
-                verifier("aucune exception levee", false);
+            verifier("demande prealable reussie", demande);
+            verifier("consultation trouvee dans historique", prerequis);
+
+            if (prerequis) {
+                Consultation consultation = historique.get(0);
+                try {
+                    consultationService.declarerPret(consultation);
+                    verifier("aucune exception levee", true);
+                } catch (Exception e) {
+                    verifier("aucune exception levee", false);
+                }
             }
         }
     }
@@ -219,54 +251,66 @@ public class ConsultationServiceTest {
     public static void test_TerminerConsultation_DejaTerminee() {
         System.out.println("Test : Ne rien faire si la consultation est deja terminee");
 
-        Client client = clientPersistant("term");
-        Medium medium = mediumPersistant(Genre.NON_SPECIFIE);
-        consultationService.demanderConsultation(client, medium);
+        Client client = clientInitialise(MAIL_CLIENT_CONSULT);
+        Medium medium = mediumInitialise();
+        verifier("prerequis : client initialise retrouve", client != null);
+        verifier("prerequis : medium initialise retrouve", medium != null);
 
-        List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
-        boolean prerequis = historique != null && !historique.isEmpty();
+        if (client != null && medium != null) {
+            assurerEmployeCompatibleDisponible(medium);
+            consultationService.demanderConsultation(client, medium);
 
-        if (prerequis) {
-            Consultation consultation = historique.get(0);
-            consultationService.terminerConsultation(consultation, "premier appel");
-            try {
-                consultationService.terminerConsultation(consultation, "deuxieme appel");
-                verifier("aucune exception levee sur double terminaison", true);
-            } catch (Exception e) {
-                verifier("aucune exception levee sur double terminaison", false);
+            List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
+            boolean prerequis = historique != null && !historique.isEmpty();
+
+            if (prerequis) {
+                Consultation consultation = historique.get(0);
+                consultationService.terminerConsultation(consultation, "premier appel");
+                try {
+                    consultationService.terminerConsultation(consultation, "deuxieme appel");
+                    verifier("aucune exception levee sur double terminaison", true);
+                } catch (Exception e) {
+                    verifier("aucune exception levee sur double terminaison", false);
+                }
+            } else {
+                verifier("prerequis : consultation existante trouvee", false);
             }
-        } else {
-            verifier("prerequis : consultation existante trouvee", false);
         }
     }
 
     public static void test_TerminerConsultation_Valide() {
         System.out.println("Test : Terminer une consultation active avec commentaire");
 
-        Client client = clientPersistant("term");
-        Medium medium = mediumPersistant(Genre.NON_SPECIFIE);
-        boolean demande = consultationService.demanderConsultation(client, medium);
+        Client client = clientInitialise(MAIL_CLIENT_CONSULT);
+        Medium medium = mediumInitialise();
+        verifier("prerequis : client initialise retrouve", client != null);
+        verifier("prerequis : medium initialise retrouve", medium != null);
 
-        List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
-        boolean prerequis = demande && historique != null && !historique.isEmpty();
+        if (client != null && medium != null) {
+            assurerEmployeCompatibleDisponible(medium);
+            boolean demande = consultationService.demanderConsultation(client, medium);
 
-        verifier("demande prealable reussie", demande);
-        verifier("consultation trouvee dans historique", prerequis);
+            List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
+            boolean prerequis = demande && historique != null && !historique.isEmpty();
 
-        if (prerequis) {
-            Consultation consultation = historique.get(0);
-            Employe employeAvant = persistanceHelper.lecture(() -> employeDao.trouverParId(consultation.getEmploye().getId()));
-            consultationService.terminerConsultation(consultation, "tres bonne seance");
+            verifier("demande prealable reussie", demande);
+            verifier("consultation trouvee dans historique", prerequis);
 
-            Consultation recuperee = consultationService.recupererConsultationParId(consultation.getId());
-            Employe employeApres = recuperee == null
-                    ? null
-                    : persistanceHelper.lecture(() -> employeDao.trouverParId(recuperee.getEmploye().getId()));
+            if (prerequis) {
+                Consultation consultation = historique.get(0);
+                Employe employeAvant = persistanceHelper.lecture(() -> employeDao.trouverParId(consultation.getEmploye().getId()));
+                consultationService.terminerConsultation(consultation, "tres bonne seance");
 
-            verifier("employe etait indisponible pendant la consultation", employeAvant != null && !employeAvant.isEstDisponible());
-            verifier("consultation marquee comme terminee", recuperee != null && recuperee.isEstTermine());
-            verifier("commentaire enregistre", recuperee != null && "tres bonne seance".equals(recuperee.getCommentaire()));
-            verifier("employe libere apres terminaison", employeApres != null && employeApres.isEstDisponible());
+                Consultation recuperee = consultationService.recupererConsultationParId(consultation.getId());
+                Employe employeApres = recuperee == null
+                        ? null
+                        : persistanceHelper.lecture(() -> employeDao.trouverParId(recuperee.getEmploye().getId()));
+
+                verifier("employe etait indisponible pendant la consultation", employeAvant != null && !employeAvant.isEstDisponible());
+                verifier("consultation marquee comme terminee", recuperee != null && recuperee.isEstTermine());
+                verifier("commentaire enregistre", recuperee != null && "tres bonne seance".equals(recuperee.getCommentaire()));
+                verifier("employe libere apres terminaison", employeApres != null && employeApres.isEstDisponible());
+            }
         }
     }
 
@@ -291,24 +335,30 @@ public class ConsultationServiceTest {
     }
 
     public static void test_RecupererConsultationParId_Valide() {
-        System.out.println("Test : Recuperer une consultation par son id");
+        System.out.println("Test : Recuperer une consultation par son id (donnees initialisees)");
 
-        Client client = clientPersistant("recup");
-        Medium medium = mediumPersistant(Genre.NON_SPECIFIE);
-        boolean demande = consultationService.demanderConsultation(client, medium);
+        Client client = clientInitialise(MAIL_CLIENT_CONSULT);
+        Medium medium = mediumInitialise();
+        verifier("prerequis : client initialise retrouve", client != null);
+        verifier("prerequis : medium initialise retrouve", medium != null);
 
-        List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
-        boolean prerequis = demande && historique != null && !historique.isEmpty();
+        if (client != null && medium != null) {
+            assurerEmployeCompatibleDisponible(medium);
+            boolean demande = consultationService.demanderConsultation(client, medium);
 
-        verifier("demande prealable reussie", demande);
-        verifier("consultation trouvee dans historique", prerequis);
+            List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
+            boolean prerequis = demande && historique != null && !historique.isEmpty();
 
-        if (prerequis) {
-            Consultation consultation = historique.get(0);
-            Consultation recuperee = consultationService.recupererConsultationParId(consultation.getId());
+            verifier("demande prealable reussie", demande);
+            verifier("consultation trouvee dans historique", prerequis);
 
-            verifier("consultation recuperee non nulle", recuperee != null);
-            verifier("id recupere correct", recuperee != null && consultation.getId().equals(recuperee.getId()));
+            if (prerequis) {
+                Consultation consultation = historique.get(0);
+                Consultation recuperee = consultationService.recupererConsultationParId(consultation.getId());
+
+                verifier("consultation recuperee non nulle", recuperee != null);
+                verifier("id recupere correct", recuperee != null && consultation.getId().equals(recuperee.getId()));
+            }
         }
     }
 
@@ -316,51 +366,47 @@ public class ConsultationServiceTest {
     // Utilitaires
     // -------------------------------------------------------------------------
 
-    private static String mailUnique(String prefixe) {
-        return prefixe + "." + System.currentTimeMillis() + "." + (sequenceMail++) + "@test.fr";
+    private static Client clientInitialise(String mail) {
+        return persistanceHelper.lecture(() -> clientDao.trouverParMail(mail));
     }
 
-    private static Client clientValide(String mail) {
-        return new Client(
-                "Nom" + sequenceMail,
-                "Prenom" + sequenceMail,
-                mail,
-                "motdepasse",
-                "060000000" + (sequenceMail % 10),
-                Genre.NON_SPECIFIE,
-                new Adresse("1", "Rue de test", "69001", "69", "Lyon"),
-                LocalDate.of(1995, 1, 1)
-        );
+    private static Client clientInitialiseSansConsultation() {
+        List<String> mailsCandidats = List.of(MAIL_CLIENT_SANS_CONSULT, MAIL_CLIENT_HISTO, MAIL_CLIENT_CONSULT);
+        for (String mail : mailsCandidats) {
+            Client client = clientInitialise(mail);
+            if (client != null) {
+                List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
+                if (historique != null && historique.isEmpty()) {
+                    return client;
+                }
+            }
+        }
+        return null;
     }
 
-    private static Client clientPersistant(String prefixe) {
-        return persistanceHelper.transaction(() -> {
-            Client client = clientValide(mailUnique(prefixe));
-            clientDao.creer(client);
-            return client;
-        });
+    private static Medium mediumInitialise() {
+        return persistanceHelper.lecture(() -> mediumDao.listerParDenomination().stream()
+                .filter(m -> m.getDenomination() != null
+                && DENOMINATION_MEDIUM_INITIALISE.equalsIgnoreCase(m.getDenomination()))
+                .findFirst()
+                .orElse(null));
     }
 
-    private static Medium mediumPersistant(Genre genre) {
-        return persistanceHelper.transaction(() -> {
-            Employe employe = new Employe(
-                    mailUnique("employe"),
-                    "Emp" + sequenceMail,
-                    "Test" + sequenceMail,
-                    "motdepasse",
-                    "070000000" + (sequenceMail % 10),
-                    genre,
-                    true
-            );
-            employeDao.creer(employe);
+    private static void assurerEmployeCompatibleDisponible(Medium medium) {
+        if (medium == null || medium.getGenre() == null) {
+            return;
+        }
 
-            Medium medium = new Cartomancien(
-                    "Medium " + System.currentTimeMillis() + " " + sequenceMail,
-                    genre,
-                    "Medium de test"
-            );
-            mediumDao.creer(medium);
-            return medium;
+        persistanceHelper.transaction(() -> {
+            List<Employe> employes = employeDao.listerParNomPrenom();
+            for (Employe employe : employes) {
+                if (employe.getGenre() == medium.getGenre() && !employe.isEstDisponible()) {
+                    employe.setEstDisponible(true);
+                    employeDao.mettreAJour(employe);
+                    break;
+                }
+            }
+            return null;
         });
     }
 

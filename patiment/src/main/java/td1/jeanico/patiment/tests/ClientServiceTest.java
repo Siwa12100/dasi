@@ -9,6 +9,9 @@ import td1.jeanico.patiment.services.ClientService;
 
 public class ClientServiceTest {
 
+    private static final String MAIL_CLIENT_INITIALISE = "arthur@free.fr";
+    private static final String MDP_CLIENT_INITIALISE = "arthur123";
+
     private static int nbTests = 0;
     private static int nbSucces = 0;
     private static int sequenceMail = 1;
@@ -61,48 +64,41 @@ public class ClientServiceTest {
     }
 
     public static void test_Authentifier_Client_Valide() {
-        System.out.println("Test : Authentifier un client valide");
+        System.out.println("Test : Authentifier un client valide initialise en BDD");
 
-        String mail = mailUnique("auth");
-        String motDePasse = "secret123";
-        Client client = clientValide(mail);
-        client.setMotDePasse(motDePasse);
-        boolean inscription = clientService.inscrire(client);
+        Client resultat = clientService.authentifier(MAIL_CLIENT_INITIALISE, MDP_CLIENT_INITIALISE);
 
-        Client resultat = clientService.authentifier(mail, motDePasse);
-
-        verifier("inscription prealable reussie", inscription);
         verifier("authentification retourne client", resultat != null);
-        verifier("mail client authentifie correct", resultat != null && mail.equalsIgnoreCase(resultat.getMail()));
+        verifier("mail client authentifie correct", resultat != null && MAIL_CLIENT_INITIALISE.equalsIgnoreCase(resultat.getMail()));
     }
 
     public static void test_ConsulterProfilAstral_ClientExistant() {
-        System.out.println("Test : Consulter le profil astral d'un client existant");
+        System.out.println("Test : Consulter le profil astral d'un client initialise en BDD");
 
-        String mail = mailUnique("profil");
-        Client client = clientValide(mail);
-        boolean inscription = clientService.inscrire(client);
+        Client client = clientService.authentifier(MAIL_CLIENT_INITIALISE, MDP_CLIENT_INITIALISE);
+        verifier("prerequis : client initialise retrouve", client != null);
 
-        ProfilAstral resultat = clientService.consulterProfilAstral(client);
+        if (client != null) {
+            ProfilAstral resultat = clientService.consulterProfilAstral(client);
 
-        verifier("inscription prealable reussie", inscription);
-        verifier("profil retourne", resultat != null);
-        verifier("animal totem renseigne", resultat != null && !estVide(resultat.getAnimalTotal()));
-        verifier("signe zodiac renseigne", resultat != null && !estVide(resultat.getSigneZodiac()));
+            verifier("profil retourne", resultat != null);
+            verifier("animal totem renseigne", resultat != null && !estVide(resultat.getAnimalTotal()));
+            verifier("signe zodiac renseigne", resultat != null && !estVide(resultat.getSigneZodiac()));
+        }
     }
 
     public static void test_RecupererClientParId() {
-        System.out.println("Test : Recuperer un client par son id");
+        System.out.println("Test : Recuperer un client initialise en BDD par son id");
 
-        String mail = mailUnique("id");
-        Client client = clientValide(mail);
-        boolean inscription = clientService.inscrire(client);
+        Client client = clientService.authentifier(MAIL_CLIENT_INITIALISE, MDP_CLIENT_INITIALISE);
+        verifier("prerequis : client initialise retrouve", client != null);
 
-        Client recupere = clientService.recupererClientParId(client.getId());
+        if (client != null) {
+            Client recupere = clientService.recupererClientParId(client.getId());
 
-        verifier("inscription prealable reussie", inscription);
-        verifier("client recupere non nul", recupere != null);
-        verifier("id recupere correct", recupere != null && client.getId().equals(recupere.getId()));
+            verifier("client recupere non nul", recupere != null);
+            verifier("id recupere correct", recupere != null && client.getId().equals(recupere.getId()));
+        }
     }
 
     private static void verifier(String message, boolean condition) {
