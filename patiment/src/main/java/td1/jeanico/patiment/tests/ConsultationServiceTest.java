@@ -1,6 +1,8 @@
 package td1.jeanico.patiment.tests;
 
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Supplier;
 import td1.jeanico.patiment.daos.ClientDao;
 import td1.jeanico.patiment.daos.EmployeDao;
@@ -27,9 +29,16 @@ public class ConsultationServiceTest {
     private static final MediumDao mediumDao = new MediumDao();
     private static final PersistanceTestHelper persistanceHelper = new PersistanceTestHelper();
 
+    /**
+     * Constructeur prive: classe utilitaire de tests statiques.
+     */
     private ConsultationServiceTest() {
     }
 
+    /**
+     * Point d'entree de la suite de tests console.
+     * Reinitialise les compteurs puis execute tous les scenarios.
+     */
     public static void lancerTestsConsultationService() {
         nbTests = 0;
         nbSucces = 0;
@@ -60,6 +69,9 @@ public class ConsultationServiceTest {
     // demanderConsultation
     // -------------------------------------------------------------------------
 
+    /**
+     * Verifie que la demande est refusee quand le client est null.
+     */
     public static void test_DemanderConsultation_ClientNull() {
         System.out.println("Test : Refuser une demande de consultation si le client est null");
 
@@ -74,6 +86,9 @@ public class ConsultationServiceTest {
         }
     }
 
+    /**
+     * Verifie que la demande est refusee quand le medium est null.
+     */
     public static void test_DemanderConsultation_MediumNull() {
         System.out.println("Test : Refuser une demande de consultation si le medium est null");
 
@@ -87,6 +102,10 @@ public class ConsultationServiceTest {
         }
     }
 
+    /**
+     * Verifie le parcours nominal de creation de consultation:
+     * consultation creee, active, liee au bon medium, employe indisponible.
+     */
     public static void test_DemanderConsultation_Valide() {
         System.out.println("Test : Creer une consultation avec un client et un medium initialises en BDD");
 
@@ -115,6 +134,9 @@ public class ConsultationServiceTest {
     // consulterHistoriqueConsultations
     // -------------------------------------------------------------------------
 
+    /**
+     * Verifie qu'un client null retourne une liste vide non nulle.
+     */
     public static void test_ConsulterHistorique_ClientNull() {
         System.out.println("Test : Retourner une liste vide si le client est null");
 
@@ -124,6 +146,9 @@ public class ConsultationServiceTest {
         verifier("liste vide", resultat != null && resultat.isEmpty());
     }
 
+    /**
+     * Verifie qu'un client sans consultation retourne un historique vide.
+     */
     public static void test_ConsulterHistorique_ClientSansConsultation() {
         System.out.println("Test : Retourner une liste vide pour un client initialise sans consultation");
 
@@ -138,6 +163,9 @@ public class ConsultationServiceTest {
         }
     }
 
+    /**
+     * Verifie qu'apres une demande valide, l'historique contient au moins une consultation.
+     */
     public static void test_ConsulterHistorique_ClientAvecConsultation() {
         System.out.println("Test : Retourner les consultations d'un client initialise ayant une demande");
 
@@ -162,6 +190,9 @@ public class ConsultationServiceTest {
     // declarerPret
     // -------------------------------------------------------------------------
 
+    /**
+     * Verifie que declarerPret ignore une consultation null sans lever d'exception.
+     */
     public static void test_DeclarerPret_ConsultationNull() {
         System.out.println("Test : Ne rien faire si la consultation est null");
 
@@ -173,6 +204,9 @@ public class ConsultationServiceTest {
         }
     }
 
+    /**
+     * Verifie que declarerPret n'a pas d'effet bloquant sur une consultation deja terminee.
+     */
     public static void test_DeclarerPret_ConsultationTerminee() {
         System.out.println("Test : Ne rien faire si la consultation est deja terminee");
 
@@ -203,6 +237,10 @@ public class ConsultationServiceTest {
         }
     }
 
+    /**
+     * Verifie que declarerPret fonctionne sur une consultation active
+     * (au minimum: pas d'exception levee).
+     */
     public static void test_DeclarerPret_Valide() {
         System.out.println("Test : Declarer pret sur une consultation active");
 
@@ -237,6 +275,9 @@ public class ConsultationServiceTest {
     // terminerConsultation
     // -------------------------------------------------------------------------
 
+    /**
+     * Verifie que terminerConsultation ignore une consultation null sans lever d'exception.
+     */
     public static void test_TerminerConsultation_ConsultationNull() {
         System.out.println("Test : Ne rien faire si la consultation a terminer est null");
 
@@ -248,6 +289,9 @@ public class ConsultationServiceTest {
         }
     }
 
+    /**
+     * Verifie qu'un double appel de terminaison ne leve pas d'exception.
+     */
     public static void test_TerminerConsultation_DejaTerminee() {
         System.out.println("Test : Ne rien faire si la consultation est deja terminee");
 
@@ -278,6 +322,10 @@ public class ConsultationServiceTest {
         }
     }
 
+    /**
+     * Verifie le parcours nominal de terminaison:
+     * commentaire persiste, etat terminee, employe libere.
+     */
     public static void test_TerminerConsultation_Valide() {
         System.out.println("Test : Terminer une consultation active avec commentaire");
 
@@ -288,16 +336,18 @@ public class ConsultationServiceTest {
 
         if (client != null && medium != null) {
             assurerEmployeCompatibleDisponible(medium);
+            List<Consultation> historiqueAvant = consultationService.consulterHistoriqueConsultations(client);
+            Set<Long> idsAvant = extraireIdsConsultations(historiqueAvant);
             boolean demande = consultationService.demanderConsultation(client, medium);
 
             List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
-            boolean prerequis = demande && historique != null && !historique.isEmpty();
+            Consultation consultation = trouverConsultationCreeePendantLeTest(historique, idsAvant, medium);
+            boolean prerequis = demande && consultation != null;
 
             verifier("demande prealable reussie", demande);
-            verifier("consultation trouvee dans historique", prerequis);
+            verifier("consultation creee pendant le test retrouvee", prerequis);
 
             if (prerequis) {
-                Consultation consultation = historique.get(0);
                 Employe employeAvant = persistanceHelper.lecture(() -> employeDao.trouverParId(consultation.getEmploye().getId()));
                 consultationService.terminerConsultation(consultation, "tres bonne seance");
 
@@ -314,10 +364,52 @@ public class ConsultationServiceTest {
         }
     }
 
+    /**
+     * Extrait les identifiants de consultations pour comparer l'etat avant/apres un test.
+     */
+    private static Set<Long> extraireIdsConsultations(List<Consultation> consultations) {
+        Set<Long> ids = new HashSet<>();
+        if (consultations != null) {
+            for (Consultation consultation : consultations) {
+                if (consultation != null && consultation.getId() != null) {
+                    ids.add(consultation.getId());
+                }
+            }
+        }
+        return ids;
+    }
+
+    /**
+     * Retrouve la consultation creee par le test courant en excluant les ids deja presents
+     * avant l'appel et en validant le medium attendu.
+     */
+    private static Consultation trouverConsultationCreeePendantLeTest(List<Consultation> historique, Set<Long> idsAvant, Medium medium) {
+        if (historique == null || medium == null || medium.getId() == null) {
+            return null;
+        }
+
+        for (Consultation consultation : historique) {
+            if (consultation == null || consultation.getId() == null) {
+                continue;
+            }
+            boolean creeePendantLeTest = !idsAvant.contains(consultation.getId());
+            boolean memeMedium = consultation.getMedium() != null
+                    && medium.getId().equals(consultation.getMedium().getId());
+            if (creeePendantLeTest && memeMedium) {
+                return consultation;
+            }
+        }
+
+        return null;
+    }
+
     // -------------------------------------------------------------------------
     // recupererConsultationParId
     // -------------------------------------------------------------------------
 
+    /**
+     * Verifie que recupererConsultationParId retourne null si l'id est null.
+     */
     public static void test_RecupererConsultationParId_IdNull() {
         System.out.println("Test : Retourner null si l'id est null");
 
@@ -326,6 +418,9 @@ public class ConsultationServiceTest {
         verifier("retourne null", resultat == null);
     }
 
+    /**
+     * Verifie que recupererConsultationParId retourne null pour un id inexistant.
+     */
     public static void test_RecupererConsultationParId_IdInexistant() {
         System.out.println("Test : Retourner null si l'id est inexistant");
 
@@ -334,6 +429,9 @@ public class ConsultationServiceTest {
         verifier("retourne null pour id inexistant", resultat == null);
     }
 
+    /**
+     * Verifie que la consultation recuperee par id correspond bien a celle creee.
+     */
     public static void test_RecupererConsultationParId_Valide() {
         System.out.println("Test : Recuperer une consultation par son id (donnees initialisees)");
 
@@ -366,10 +464,17 @@ public class ConsultationServiceTest {
     // Utilitaires
     // -------------------------------------------------------------------------
 
+    /**
+     * Charge un client initialise en BDD via son mail.
+     */
     private static Client clientInitialise(String mail) {
         return persistanceHelper.lecture(() -> clientDao.trouverParMail(mail));
     }
 
+    /**
+     * Cherche un client initialise dont l'historique est vide.
+     * Sert a garantir un scenario de depart sans consultation.
+     */
     private static Client clientInitialiseSansConsultation() {
         List<String> mailsCandidats = List.of(MAIL_CLIENT_SANS_CONSULT, MAIL_CLIENT_HISTO, MAIL_CLIENT_CONSULT);
         for (String mail : mailsCandidats) {
@@ -384,6 +489,9 @@ public class ConsultationServiceTest {
         return null;
     }
 
+    /**
+     * Charge un medium initialise en BDD par denomination.
+     */
     private static Medium mediumInitialise() {
         return persistanceHelper.lecture(() -> mediumDao.listerParDenomination().stream()
                 .filter(m -> m.getDenomination() != null
@@ -392,6 +500,10 @@ public class ConsultationServiceTest {
                 .orElse(null));
     }
 
+    /**
+     * Force la disponibilite d'un employe compatible avant une demande de consultation,
+     * afin de rendre le test deterministic.
+     */
     private static void assurerEmployeCompatibleDisponible(Medium medium) {
         if (medium == null || medium.getGenre() == null) {
             return;
@@ -410,6 +522,9 @@ public class ConsultationServiceTest {
         });
     }
 
+    /**
+     * Assertion console minimale: incrémente les compteurs et affiche le resultat.
+     */
     private static void verifier(String message, boolean condition) {
         nbTests++;
         if (condition) {
@@ -422,10 +537,16 @@ public class ConsultationServiceTest {
 
     private static final class PersistanceTestHelper extends SupportPersistance {
 
+        /**
+         * Execute une operation en lecture avec gestion du contexte de persistance.
+         */
         private <T> T lecture(Supplier<T> action) {
             return executerLecture(action);
         }
 
+        /**
+         * Execute une operation transactionnelle avec commit/rollback.
+         */
         private <T> T transaction(Supplier<T> action) {
             return executerEnTransaction(action);
         }
