@@ -17,26 +17,24 @@ import td1.jeanico.patiment.modeles.utilisateurs.Genre;
 public class Patiment {
     public static void main(String[] args) {
         JpaUtil.creerFabriquePersistance();
+        LanceurInitialisationBdd bdInitialiseur = new LanceurInitialisationBdd();
         
         int choixLancement = 1;
         switch (choixLancement) {
-            case 1:
+            case 1 -> {
+                bdInitialiseur.lancementInitialisationBdd();
                 LanceurScenarios.lancerScenarios();
-                break;
-            case 2:
+            }
+            case 2 -> {
+                bdInitialiseur.lancementInitialisationBdd();
                 LanceurTestsFonctionnels.lancerTestsFonctionnels();
-                break;
-
-            case 3:
-            case 4:
-                lancerApplication();
-                break;
-            default:
-                System.out.println("Choix de lancement invalide."); 
+            }
+            case 3 -> lancerApplication();
+            default -> System.out.println("Choix de lancement invalide."); 
         }
 
         JpaUtil.fermerFabriquePersistance();
-    }   
+    }
 
     public static void lancerApplication() {
         System.out.println("Lancement de l'application...");
