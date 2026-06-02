@@ -55,6 +55,12 @@ public class Client extends Utilisateur {
     public Client() {
     }
     
+    public Client(String nom, String prenom, String mail, String motDePasse, String telephone, Genre genre, Adresse adresse, LocalDate dateNaissance) {
+        super(mail, prenom, nom, motDePasse, telephone, genre);
+        this.adresse = adresse;
+        this.dateNaissance = dateNaissance;
+    }
+    
     public Client(String nom, String prenom, String mail, String motDePasse, String telephone, Genre genre, Adresse adresse, LocalDate dateNaissance, ProfilAstral profilAstral) {
         super(mail, prenom, nom, motDePasse, telephone, genre);
         this.adresse = adresse;

@@ -101,7 +101,7 @@ public class ClientServiceTest {
             ProfilAstral resultat = clientService.consulterProfilAstral(client);
 
             verifier("profil retourne", resultat != null);
-            verifier("animal totem renseigne", resultat != null && !estVide(resultat.getAnimalTotal()));
+            verifier("animal totem renseigne", resultat != null && !estVide(resultat.getAnimalTotem()));
             verifier("signe zodiac renseigne", resultat != null && !estVide(resultat.getSigneZodiac()));
         }
     }

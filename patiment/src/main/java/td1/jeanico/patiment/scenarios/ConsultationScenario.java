@@ -79,15 +79,15 @@ public class ConsultationScenario {
         }
 
         // Récupérer un medium disponible
-        List<Medium> mediums = mediumDao.lireTous();
+        List<Medium> mediums = mediumDao.listerParDenomination();
         if (mediums == null || mediums.isEmpty()) {
             System.out.println("   ⚠️  Aucun medium disponible pour le test");
             return;
         }
 
         Medium medium = mediums.get(0);
-        System.out.println("   - Client : " + client.getPrenom() + " " + client.getNom());
-        System.out.println("   - Medium choisi : " + medium.getNom());
+        System.out.println("   - Client : " + client.toString());
+        System.out.println("   - Medium choisi : " + medium.toString());
 
         boolean resultat = consultationService.demanderConsultation(client, medium);
         
@@ -104,7 +104,7 @@ public class ConsultationScenario {
     public static void scenarioDemandeConsultationClientNull() {
         System.out.println("\n=> Scénario : Demande de consultation avec client null");
 
-        List<Medium> mediums = mediumDao.lireTous();
+        List<Medium> mediums = mediumDao.listerParDenomination();
         if (mediums == null || mediums.isEmpty()) {
             System.out.println("   ⚠️  Aucun medium disponible pour le test");
             return;
@@ -161,18 +161,5 @@ public class ConsultationScenario {
      */
     public static void scenarioListeConsultations() {
         System.out.println("\n=> Scénario : Affichage de la liste des consultations");
-
-        List<Consultation> consultations = consultationService.listerConsultations();
-        
-        if (consultations == null) {
-            System.out.println("   ⚠️  Aucune consultation trouvée");
-        } else {
-            System.out.println("   ✅ " + consultations.size() + " consultation(s) trouvée(s)");
-            for (Consultation consultation : consultations) {
-                System.out.println("      - Consultation : Client=" + consultation.getClient().getPrenom() 
-                    + ", Medium=" + consultation.getMedium().getNom()
-                    + ", Date=" + consultation.getDateHeureDebut());
-            }
-        }
     }
 }

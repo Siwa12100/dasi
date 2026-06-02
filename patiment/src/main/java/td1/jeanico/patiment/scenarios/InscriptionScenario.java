@@ -79,7 +79,7 @@ public class InscriptionScenario {
             return;
         }
         System.out.println("   ✅ SUCCES : Inscription réussie => " + client.toString());
-        System.out.println("       Un email de succes a du être envoyé ! A vérifier dans les logs du dessus !");
+        System.out.println("      Un email de succès a dû être envoyé ! A vérifier dans les logs du dessus !");
     }
 
     /**
@@ -103,7 +103,7 @@ public class InscriptionScenario {
         );
         
         boolean resultat1 = clientService.inscrire(client1);
-        System.out.println("   - Premier client inscrit : " + resultat1);
+        System.out.println("   ✅ SUCCES : Premier client inscrit : " + resultat1);
 
         // Deuxième client avec le même email
         Client client2 = new Client(
@@ -122,6 +122,7 @@ public class InscriptionScenario {
             System.out.println("   ❌ ECHEC : L'inscription avec email doublon devrait échouer");
         } else {
             System.out.println("   ✅ SUCCES : L'inscription avec email doublon a correctement échoué");
+            System.out.println("      Un email d'échec a dû être envoyé ! A vérifier dans les logs du dessus !");
         }
     }
 

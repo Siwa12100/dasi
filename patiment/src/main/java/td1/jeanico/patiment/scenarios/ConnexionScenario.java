@@ -1,13 +1,14 @@
 package td1.jeanico.patiment.scenarios;
 
 import java.time.LocalDate;
+import td1.jeanico.patiment.daos.ClientDao;
+import td1.jeanico.patiment.daos.EmployeDao;
 import td1.jeanico.patiment.metier.modeles.clients.Adresse;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Client;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Employe;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Genre;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Utilisateur;
 import td1.jeanico.patiment.metier.services.AuthService;
-import td1.jeanico.patiment.metier.services.ClientService;
 
 /**
  * Scénarios de tests pour l'authentification des utilisateurs
@@ -16,16 +17,11 @@ import td1.jeanico.patiment.metier.services.ClientService;
 public class ConnexionScenario {
 
     private static AuthService authService;
-    private static ClientService clientService;
 
     public static void lancer() {
         System.out.println("\n========== SCÉNARIOS DE CONNEXION ==========");
 
         authService = new AuthService();
-        clientService = new ClientService();
-
-        // Préparer les données : créer un client valide pour les tests
-        preparerDonneesTest();
 
         scenarioConnexionClientValide();
         scenarioConnexionMotDePasseIncorrect();
@@ -39,59 +35,12 @@ public class ConnexionScenario {
     }
 
     /**
-     * Prépare les données de test en créant un client d'essai
-     */
-    private static void preparerDonneesTest() {
-        System.out.println("\n=> Préparation du client de test...");
-        
-        Adresse adresse = new Adresse("20", "Rue de la Paix", "75002", "75", "Paris");
-        Client clientTest = new Client(
-            "Doe",
-            "Alice",
-            "alice.doe@email.com",
-            "motdepasse123",
-            "0600000000",
-            Genre.FEMME,
-            adresse,
-            LocalDate.of(1998, 6, 18)
-        );
-
-        ClientDao clientDao = new ClientDao();
-        try {
-            clientDao.creer(clientTest);
-            System.out.println("INFO: Client de test créé avec succès");
-        } catch (Exception e) {
-            System.out.println("ERROR: Le client de test n'a pas pu être créé (peut-être déjà présent)");
-        }
-
-        System.out.println("\n=> Préparation de l'employé de test...");
-
-        Employe employeTest = new Employe(
-            "anna@predictif.fr",
-            "Smith",
-            "Anna",
-            "anna123",
-            "0600000001",
-            Genre.FEMME,
-            true
-        );
-
-        EmployeDao employeDao = new EmployeDao();
-        try {
-            employeDao.creer(employeTest);
-            System.out.println("INFO: Employé de test créé avec succès");
-        } catch (Exception e) {
-            System.out.println("ERROR: L'employé de test n'a pas pu être créé (peut-être déjà présent)");
-        }
-    }
-
-    /**
-     * Test : connexion avec des identifiants valides
+     * Test : connexion avec des identifiants valides (issues de LanceurInitialisationBdd.java !!)
      */
     public static void scenarioConnexionClientValide() {
         System.out.println("\n=> Scénario : Connexion avec identifiants valides");
 
-        Utilisateur utilisateur = authService.auth²entifier("alice.doe@email.com", "motdepasse123");
+        Utilisateur utilisateur = authService.authentifier("alice.doe@email.com", "secret123");
         
         if (utilisateur == null) {
             System.out.println("   ❌ ECHEC : L'authentification devrait réussir");
@@ -99,7 +48,6 @@ public class ConnexionScenario {
         }
 
         if (utilisateur instanceof Client) {
-            Client client = (Client) utilisateur;
             System.out.println("   ✅ SUCCES : Authentification réussie  => " + utilisateur.toString());
         } else {
             System.out.println("   ❌ ECHEC : L'utilisateur authentifié n'est pas un client");
@@ -195,8 +143,7 @@ public class ConnexionScenario {
         }
 
         if (utilisateur instanceof Employe) {
-            Employe employe = (Employe) utilisateur;
-            System.out.println("   ✅ SUCCES : Authentification réussie => Employé: " + employe.toString());
+            System.out.println("   ✅ SUCCES : Authentification réussie => Employé: " + utilisateur.toString());
         } else {
             System.out.println("   ❌ ECHEC : L'utilisateur authentifié n'est pas un employé");
         }

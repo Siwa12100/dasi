@@ -237,7 +237,7 @@ public class LanceurAppConsole {
         } else {
             System.out.println("  ✨ Signe du zodiaque : " + profil.getSigneZodiac());
             System.out.println("  🐉 Signe chinois     : " + profil.getSigneChinois());
-            System.out.println("  🐾 Animal totem      : " + profil.getAnimalTotal());
+            System.out.println("  🐾 Animal totem      : " + profil.getAnimalTotem());
             System.out.println("  🎨 Couleur bonheur   : " + profil.getCouleurBonheur());
         }
         Saisie.pause();

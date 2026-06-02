@@ -44,7 +44,7 @@ public class PredictionService {
         try {
             JsonObject jsonPredictions = astroNetWebClient.recupererPredictions(
                     profilAstral.getCouleurBonheur(),
-                    profilAstral.getAnimalTotal(),
+                    profilAstral.getAnimalTotem(),
                     scoreAmour,
                     scoreSante,
                     scoreTravail
@@ -69,7 +69,7 @@ public class PredictionService {
     private boolean profilAstralValide(ProfilAstral profilAstral) {
         return profilAstral != null
                 && !estVide(profilAstral.getCouleurBonheur())
-                && !estVide(profilAstral.getAnimalTotal());
+                && !estVide(profilAstral.getAnimalTotem());
     }
 
     /**

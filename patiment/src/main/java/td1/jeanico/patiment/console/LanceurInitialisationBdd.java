@@ -9,8 +9,11 @@ import td1.jeanico.patiment.daos.ConsultationDao;
 import td1.jeanico.patiment.daos.EmployeDao;
 import td1.jeanico.patiment.daos.MediumDao;
 import td1.jeanico.patiment.metier.modeles.clients.Adresse;
+import td1.jeanico.patiment.metier.modeles.clients.ProfilAstral;
+import td1.jeanico.patiment.metier.modeles.consultations.Consultation;
 import td1.jeanico.patiment.metier.modeles.mediums.Astrologue;
 import td1.jeanico.patiment.metier.modeles.mediums.Cartomancien;
+import td1.jeanico.patiment.metier.modeles.mediums.Medium;
 import td1.jeanico.patiment.metier.modeles.mediums.Spirite;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Client;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Employe;
@@ -109,7 +112,7 @@ public class LanceurInitialisationBdd extends SupportPersistance {
             }
             
             // Initialiser les consultations
-            if (consultationDao.lireTous().isEmpty()) {
+            if (consultationDao.listerParDateDesc().isEmpty()) {
                 System.out.println("Création de 100 consultations...");
                 creerConsultations(consultationDao, clientDao, mediumDao, employeDao);
             } else {
@@ -175,8 +178,10 @@ public class LanceurInitialisationBdd extends SupportPersistance {
      * Crée 5000 clients
      */
     private void creerClients(ClientDao clientDao) {
+        clientDao.creer(new Client("Doe", "Alice", "alice.doe@email.com", "secret123", "0612345678", Genre.FEMME, new Adresse("20", "Rue de la Paix", "75002", "75", "Paris"), LocalDate.of(1998, 6, 18)));
+        
         Random random = new Random(SEED);
-        int totalClients = 5000;
+        int totalClients = 4999;
         
         for (int i = 0; i < totalClients; i++) {
             String nom = NOMS[random.nextInt(NOMS.length)];
@@ -231,9 +236,9 @@ public class LanceurInitialisationBdd extends SupportPersistance {
     private void creerConsultations(ConsultationDao consultationDao, ClientDao clientDao, MediumDao mediumDao, EmployeDao employeDao) {
         Random random = new Random(SEED);
         
-        List<Client> clients = clientDao.lireTous();
-        List<Medium> mediums = mediumDao.lireTous();
-        List<Employe> employes = employeDao.lireTous();
+        List<Client> clients = clientDao.listerParNomPrenom();
+        List<Medium> mediums = mediumDao.listerParDenomination();
+        List<Employe> employes = employeDao.listerParNomPrenom();
         
         if (clients == null || clients.isEmpty() || mediums == null || mediums.isEmpty() || employes == null || employes.isEmpty()) {
             System.out.println("ERROR: Impossible de créer des consultations (données manquantes)");

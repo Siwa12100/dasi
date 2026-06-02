@@ -218,9 +218,12 @@ public class ClientService extends SupportPersistance {
             );
             if (retourGeoService != null) {
                 // Le geocodage peut retourner une adresse approximate sans numero.
+                // NOTE: on ne contraint pas sur l'orthographe des villes/nom de rue mais sur les numéros (code postale & numéro de voie)
                 adresseValidee = !estVide(retourGeoService.getNomDeVoie())
                         && !estVide(retourGeoService.getCodePostal())
-                        && !estVide(retourGeoService.getVille());
+                        && !estVide(retourGeoService.getVille())
+                        && retourGeoService.getNumeroDeVoie().equals(adresse.getNumeroDeVoie())
+                        && retourGeoService.getCodePostal().equals(adresse.getCodePostal());
             }
         } catch (Exception e) {
             adresseValidee = false;
