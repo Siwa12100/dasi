@@ -47,9 +47,9 @@ public class MediumService extends SupportPersistance {
             return listerMediums();
         }
         return executerLecture(() -> switch (typeMedium) {
-            case Spirite -> new ArrayList<>(mediumDao.listerSpirites());
-            case Cartomancien -> new ArrayList<>(mediumDao.listerCartomanciens());
-            case Astrologue -> new ArrayList<>(mediumDao.listerAstrologues());
+            case Spirite -> new ArrayList<>(mediumDao.listerSpiritesParDenomination());
+            case Cartomancien -> new ArrayList<>(mediumDao.listerCartomanciensParDenomination());
+            case Astrologue -> new ArrayList<>(mediumDao.listerAstrologuesParDenomination());
         });
     }
     

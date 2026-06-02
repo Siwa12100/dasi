@@ -1,5 +1,6 @@
 package td1.jeanico.patiment.services;
 
+import java.util.List;
 import td1.jeanico.patiment.outils.SupportPersistance;
 
 import td1.jeanico.patiment.daos.EmployeDao;
@@ -23,19 +24,6 @@ public class EmployeService extends SupportPersistance {
     public EmployeService(EmployeDao employeDao) {
         this.employeDao = employeDao;
     }
-
-    /**
-     * Authentifie un employé par mail/mot de passe.
-     * @param mail
-     * @param motDePasse
-     * @return 
-     */
-    public Employe authentifier(String mail, String motDePasse) {
-        if (estVide(mail) || estVide(motDePasse)) {
-            return null;
-        }
-        return executerLecture(() -> employeDao.trouverParMailEtMotDePasse(mail, motDePasse));
-    }
     
     /**
      * Récupère un employé par son identifiant.
@@ -49,10 +37,11 @@ public class EmployeService extends SupportPersistance {
         return executerLecture(() -> employeDao.trouverParId(id));
     }
 
-    /**
-     * Indique si une chaîne est nulle ou vide.
+        /**
+     * Liste les employés ordonées par nom/prénom
+     * @return 
      */
-    private boolean estVide(String value) {
-        return value == null || value.isBlank();
+    public List<Employe> listerEmployes() {
+        return executerLecture(employeDao::listerParNomPrenom);
     }
 }

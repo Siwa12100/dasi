@@ -2,7 +2,9 @@ package td1.jeanico.patiment.daos;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import td1.jeanico.patiment.modeles.consultations.Consultation;
 import td1.jeanico.patiment.modeles.utilisateurs.Employe;
+import td1.jeanico.patiment.modeles.utilisateurs.Genre;
 
 public class EmployeDao {
 
@@ -47,5 +49,17 @@ public class EmployeDao {
                 "SELECT e FROM Employe e WHERE e.estDisponible = TRUE ORDER BY e.nom ASC, e.prenom ASC",
                 Employe.class
         ).getResultList();
+    }
+    
+        
+    public Employe trouverEmployeCompatible(Genre genre) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        List<Employe> resultats = em.createQuery(
+                "SELECT e FROM Employe e WHERE e.genre = :genre AND e.estDisponible = TRUE ORDER BY (SELECT COUNT(c) FROM Consultation c WHERE c.employe = e)",
+                Employe.class
+        ).setParameter("genre", genre)
+                .setMaxResults(1)
+                .getResultList();
+        return resultats.isEmpty() ? null : resultats.get(0);
     }
 }

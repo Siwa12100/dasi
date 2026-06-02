@@ -12,6 +12,7 @@ import td1.jeanico.patiment.modeles.clients.ProfilAstral;
 import td1.jeanico.patiment.outils.Message;
 import td1.jeanico.patiment.webClients.ClientWebAstroNet;
 import jakarta.json.JsonObject;
+import java.util.List;
 
 public class ClientService extends SupportPersistance {
 
@@ -88,71 +89,6 @@ public class ClientService extends SupportPersistance {
     }
 
     /**
-     * Authentifie un client par couple mail/mot de passe.
-     * Retourne null si les entrées sont vides ou inconnues.
-     * @param mail
-     * @param motDePasse
-     * @return 
-     */
-    public Client authentifier(String mail, String motDePasse) {
-        if (estVide(mail) || estVide(motDePasse)) {
-            return null;
-        }
-        return executerLecture(() -> clientDao.trouverParMailEtMotDePasse(mail, motDePasse));
-    }
-
-    /**
-     * Retourne le profil astral d'un client.
-     * Si absent en base, il est récupéré via AstroNet puis sauvegardé.
-     * @param client
-     * @return 
-     */
-    public ProfilAstral consulterProfilAstral(Client client) {
-        if (client == null) {
-            return null;
-        }
-
-        ProfilAstral profilExistant = executerLecture(() -> {
-            Client clientPersistant = resoudreClient(client);
-            return clientPersistant == null ? null : clientPersistant.getProfilAstral();
-        });
-
-        if (profilExistant != null) {
-            return profilExistant;
-        }
-
-        try {
-            return executerEnTransaction(() -> {
-                Client clientPersistant = resoudreClient(client);
-                if (clientPersistant == null) {
-                    return null;
-                }
-                ProfilAstral profilAstral = recupererProfilAstralDepuisAstroNet(
-                        clientPersistant.getPrenom(),
-                        clientPersistant.getDateNaissance()
-                );
-                clientPersistant.setProfilAstral(profilAstral);
-                clientDao.mettreAJour(clientPersistant);
-                return profilAstral;
-            });
-        } catch (RuntimeException ex) {
-            return null;
-        }
-    }
-
-    /**
-     * Recharge le client depuis la base avec les données persistées les plus récentes.
-     * @param client
-     * @return 
-     */
-    public Client consulterProfilClient(Client client) {
-        if (client == null) {
-            return null;
-        }
-        return executerLecture(() -> resoudreClient(client));
-    }
-
-    /**
      * Recherche un client par identifiant technique.
      * @param id
      * @return 
@@ -163,18 +99,13 @@ public class ClientService extends SupportPersistance {
         }
         return executerLecture(() -> clientDao.trouverParId(id));
     }
-
+    
     /**
-     * Résout un client soit par son id, soit par son mail.
+     * Liste les clients ordonées par nom/prénom
+     * @return 
      */
-    private Client resoudreClient(Client client) {
-        if (client.getId() != null) {
-            return clientDao.trouverParId(client.getId());
-        }
-        if (!estVide(client.getMail())) {
-            return clientDao.trouverParMail(client.getMail());
-        }
-        return null;
+    public List<Client> listerClients() {
+        return executerLecture(clientDao::listerParNomPrenom);
     }
 
     /**
