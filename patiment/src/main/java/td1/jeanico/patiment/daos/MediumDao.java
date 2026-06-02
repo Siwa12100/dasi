@@ -27,7 +27,7 @@ public class MediumDao {
         ).getResultList();
     }
 
-    public List<Spirite> listerSpirites() {
+    public List<Spirite> listerSpiritesParDenomination() {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.createQuery(
                 "SELECT s FROM Spirite s ORDER BY s.denomination ASC",
@@ -35,7 +35,7 @@ public class MediumDao {
         ).getResultList();
     }
 
-    public List<Cartomancien> listerCartomanciens() {
+    public List<Cartomancien> listerCartomanciensParDenomination() {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.createQuery(
                 "SELECT c FROM Cartomancien c ORDER BY c.denomination ASC",
@@ -43,7 +43,7 @@ public class MediumDao {
         ).getResultList();
     }
 
-    public List<Astrologue> listerAstrologues() {
+    public List<Astrologue> listerAstrologuesParDenomination() {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.createQuery(
                 "SELECT a FROM Astrologue a ORDER BY a.denomination ASC",
