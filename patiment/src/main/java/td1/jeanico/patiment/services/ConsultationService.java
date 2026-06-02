@@ -5,10 +5,8 @@ import td1.jeanico.patiment.outils.SupportPersistance;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import td1.jeanico.patiment.daos.ClientDao;
 import td1.jeanico.patiment.daos.ConsultationDao;
 import td1.jeanico.patiment.daos.EmployeDao;
-import td1.jeanico.patiment.daos.MediumDao;
 import td1.jeanico.patiment.modeles.utilisateurs.Client;
 import td1.jeanico.patiment.modeles.consultations.Consultation;
 import td1.jeanico.patiment.modeles.utilisateurs.Employe;
@@ -18,26 +16,23 @@ import td1.jeanico.patiment.outils.Message;
 public class ConsultationService extends SupportPersistance {
 
     private final ConsultationDao consultationDao;
-    private final ClientDao clientDao;
     private final EmployeDao employeDao;
 
     /**
      * Constructeur par défaut.
      */
     public ConsultationService() {
-        this(new ConsultationDao(), new ClientDao(), new EmployeDao());
+        this(new ConsultationDao(), new EmployeDao());
     }
 
     /**
      * Constructeur injectable pour tests/intégration.
      * @param consultationDao
-     * @param clientDao
      * @param employeDao
      * @param mediumDao
      */
-    public ConsultationService(ConsultationDao consultationDao, ClientDao clientDao, EmployeDao employeDao) {
+    public ConsultationService(ConsultationDao consultationDao, EmployeDao employeDao) {
         this.consultationDao = consultationDao;
-        this.clientDao = clientDao;
         this.employeDao = employeDao;
     }
     
@@ -52,22 +47,29 @@ public class ConsultationService extends SupportPersistance {
         if (client == null || medium == null) {
             return false;
         }
-        
-        Employe employe = employeDao.trouverEmployeCompatible(medium.getGenre());
-        if (employe == null) {
+
+        Employe employeAffecte = executerEnTransaction(() -> {
+            Employe employe = employeDao.trouverEmployeCompatible(medium.getGenre());
+            if (employe == null) {
+                return null;
+            }
+
+            // L'employé est verrouillé comme indisponible dès la création.
+            employe.setEstDisponible(false);
+            employeDao.mettreAJour(employe);
+
+            Consultation consultation = new Consultation("", LocalDateTime.now(), false, client, employe, medium);
+            consultationDao.creer(consultation);
+            return employe;
+        });
+
+        if (employeAffecte == null) {
             return false;
         }
 
-        // L'employé est verrouillé comme indisponible dès la création.
-        employe.setEstDisponible(false);
-        employeDao.mettreAJour(employe);
-
-        Consultation consultation = new Consultation("", LocalDateTime.now(), false, client, employe, medium);
-        consultationDao.creer(consultation);
-        
         Message.envoyerNotification(
-                employe.getTelephone(),
-            "Bonjour " + securiser(employe.getPrenom()) + ". Consultation requise pour "
+                employeAffecte.getTelephone(),
+                "Bonjour " + securiser(employeAffecte.getPrenom()) + ". Consultation requise pour "
                 + formatNomComplet(client)
                 + ". Medium a incarner : "
                 + securiser(medium.getDenomination())

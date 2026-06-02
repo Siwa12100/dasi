@@ -18,7 +18,7 @@ public class Patiment {
     public static void main(String[] args) {
         JpaUtil.creerFabriquePersistance();
         
-        int choixLancement = 1;
+        int choixLancement = 2;
         switch (choixLancement) {
             case 1:
                 LanceurScenarios.lancerScenarios();

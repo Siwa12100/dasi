@@ -16,7 +16,7 @@
   "portsAttributes": {
     "4377": {
       "label": "MariaDB"
-    },
+    },ssh 
     "9090": {
       "label": "App 9090"
     }
