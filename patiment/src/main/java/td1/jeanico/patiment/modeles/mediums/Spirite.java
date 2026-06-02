@@ -23,4 +23,9 @@ public class Spirite extends Medium {
     public void setSupport(String support) {
         this.support = support;
     }
+            
+    @Override
+    public String toString() {
+        return "Astrologue{" + "id=" + ID + ", denomination=" + denomination + ", genre=" + genre + ", presentation=" + presentation + ", support=" + support + '}';
+    }
 }

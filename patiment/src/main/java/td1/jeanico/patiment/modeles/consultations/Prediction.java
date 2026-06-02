@@ -58,6 +58,11 @@ public class Prediction implements Serializable {
     public void setTravail(String travail) {
         this.travail = travail;
     }
+    
+    @Override
+    public String toString() {
+        return "Prediction{" + "amour=" + amour + ", sante=" + sante + ", travail=" + travail + '}';
+    }
 
     @Override
     public int hashCode() {

@@ -19,7 +19,7 @@ public class Patiment {
         JpaUtil.creerFabriquePersistance();
         LanceurInitialisationBdd bdInitialiseur = new LanceurInitialisationBdd();
         
-        int choixLancement = 1;
+        int choixLancement = 2;
         switch (choixLancement) {
             case 1 -> {
                 bdInitialiseur.lancementInitialisationBdd();

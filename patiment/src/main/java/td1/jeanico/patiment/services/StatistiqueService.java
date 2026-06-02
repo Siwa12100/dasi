@@ -97,8 +97,8 @@ public class StatistiqueService extends SupportPersistance {
         if (nbMediums <= 0) {
             return List.of();
         }
+        Map<Medium, Integer> compteurs = listerNombreConsultationsParMedium();
         return executerLecture(() -> {
-            Map<Medium, Integer> compteurs = listerNombreConsultationsParMedium();
             List<Map.Entry<Medium, Integer>> entrees = new ArrayList<>(compteurs.entrySet());
             // Tri secondaire alpha pour stabiliser les égalités.
             entrees.sort(Comparator
