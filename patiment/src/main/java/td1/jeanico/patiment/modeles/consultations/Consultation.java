@@ -101,7 +101,12 @@ public class Consultation implements Serializable {
     public void setMedium(Medium medium) {
         this.medium = medium;
     }
-
+    
+    @Override
+    public String toString() {
+        return "Consultation{" + "commentaire=" + commentaire + ", dateDemande=" + dateDemande + ", estTermine=" + estTermine + ", client=" + client + ", employe=" + employe + ", medium=" + medium + '}';
+    }
+    
     @Override
     public int hashCode() {
         return Objects.hashCode(ID);
