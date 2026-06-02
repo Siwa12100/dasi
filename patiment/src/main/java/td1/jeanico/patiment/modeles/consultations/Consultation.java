@@ -21,7 +21,7 @@ public class Consultation implements Serializable {
 
     private String commentaire;
 
-    private LocalDateTime date;
+    private LocalDateTime dateDemande;
 
     private boolean estTermine;
 
@@ -37,9 +37,9 @@ public class Consultation implements Serializable {
     public Consultation() {
     }
 
-    public Consultation(String commentaire, LocalDateTime date, boolean estTermine, Client client, Employe employe, Medium medium) {
+    public Consultation(String commentaire, LocalDateTime dateDemande, boolean estTermine, Client client, Employe employe, Medium medium) {
         this.commentaire = commentaire;
-        this.date = date;
+        this.dateDemande = dateDemande;
         this.estTermine = estTermine;
         this.client = client;
         this.employe = employe;
@@ -63,11 +63,11 @@ public class Consultation implements Serializable {
     }
 
     public LocalDateTime getDate() {
-        return date;
+        return dateDemande;
     }
 
     public void setDate(LocalDateTime date) {
-        this.date = date;
+        this.dateDemande = date;
     }
 
     public boolean isEstTermine() {

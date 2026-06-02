@@ -45,6 +45,9 @@ public class ClientService extends SupportPersistance {
         if (!aInformationsInscriptionValides(client)) {
             return false;
         }
+        
+        // TODO: check address with Geocoding API
+        // return false in cas of errors
 
         boolean inscriptionReussie;
         try {
@@ -58,7 +61,7 @@ public class ClientService extends SupportPersistance {
                 return true;
             });
         } catch (RuntimeException ex) {
-            return false;
+            inscriptionReussie = false;
         }
 
         // Une notification est systématiquement envoyée (succès ou échec).
