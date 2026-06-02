@@ -4,13 +4,13 @@ import java.time.LocalDate;
 import td1.jeanico.patiment.daos.ClientDao;
 import td1.jeanico.patiment.daos.EmployeDao;
 import td1.jeanico.patiment.daos.MediumDao;
-import td1.jeanico.patiment.modeles.clients.Adresse;
-import td1.jeanico.patiment.modeles.mediums.Astrologue;
-import td1.jeanico.patiment.modeles.mediums.Cartomancien;
-import td1.jeanico.patiment.modeles.mediums.Spirite;
-import td1.jeanico.patiment.modeles.utilisateurs.Client;
-import td1.jeanico.patiment.modeles.utilisateurs.Employe;
-import td1.jeanico.patiment.modeles.utilisateurs.Genre;
+import td1.jeanico.patiment.metier.modeles.clients.Adresse;
+import td1.jeanico.patiment.metier.modeles.mediums.Astrologue;
+import td1.jeanico.patiment.metier.modeles.mediums.Cartomancien;
+import td1.jeanico.patiment.metier.modeles.mediums.Spirite;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Client;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Employe;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Genre;
 import td1.jeanico.patiment.outils.SupportPersistance;
 
 public class LanceurInitialisationBdd extends SupportPersistance {

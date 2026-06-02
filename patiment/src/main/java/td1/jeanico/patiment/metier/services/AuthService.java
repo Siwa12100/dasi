@@ -1,9 +1,9 @@
-package td1.jeanico.patiment.services;
+package td1.jeanico.patiment.metier.services;
 
 import td1.jeanico.patiment.outils.SupportPersistance;
 
 import td1.jeanico.patiment.daos.UtilisateurDao;
-import td1.jeanico.patiment.modeles.utilisateurs.Utilisateur;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Utilisateur;
 
 public class AuthService extends SupportPersistance {
 

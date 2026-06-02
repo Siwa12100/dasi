@@ -1,18 +1,17 @@
-package td1.jeanico.patiment.services;
+package td1.jeanico.patiment.outils;
 
 import td1.jeanico.patiment.mappers.MappeurGeocodage;
-
-import td1.jeanico.patiment.modeles.clients.Adresse;
+import td1.jeanico.patiment.metier.modeles.clients.Adresse;
 import td1.jeanico.patiment.webClients.ClientWebGeocodage;
 
-public class GeocodageService {
+public class AdresseChercheur {
 
     private final ClientWebGeocodage geocodageWebClient;
 
     /**
      * Constructeur par défaut.
      */
-    public GeocodageService() {
+    public AdresseChercheur() {
         this(new ClientWebGeocodage());
     }
 
@@ -20,7 +19,7 @@ public class GeocodageService {
      * Constructeur injectable.
      * @param geocodageWebClient
      */
-    public GeocodageService(ClientWebGeocodage geocodageWebClient) {
+    public AdresseChercheur(ClientWebGeocodage geocodageWebClient) {
         this.geocodageWebClient = geocodageWebClient;
     }
 

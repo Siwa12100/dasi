@@ -2,14 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package td1.jeanico.patiment.modeles.utilisateurs;
+package td1.jeanico.patiment.metier.modeles.utilisateurs;
 
 import java.time.LocalDate;
 import java.util.Objects;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import td1.jeanico.patiment.modeles.clients.Adresse;
-import td1.jeanico.patiment.modeles.clients.ProfilAstral;
+
+import td1.jeanico.patiment.metier.modeles.clients.Adresse;
+import td1.jeanico.patiment.metier.modeles.clients.ProfilAstral;
 
 /**
  *

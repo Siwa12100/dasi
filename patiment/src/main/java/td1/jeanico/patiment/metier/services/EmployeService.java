@@ -1,10 +1,10 @@
-package td1.jeanico.patiment.services;
+package td1.jeanico.patiment.metier.services;
 
 import java.util.List;
 import td1.jeanico.patiment.outils.SupportPersistance;
 
 import td1.jeanico.patiment.daos.EmployeDao;
-import td1.jeanico.patiment.modeles.utilisateurs.Employe;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Employe;
 
 public class EmployeService extends SupportPersistance {
 

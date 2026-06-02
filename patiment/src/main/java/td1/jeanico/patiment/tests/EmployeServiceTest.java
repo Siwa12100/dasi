@@ -1,8 +1,9 @@
 package td1.jeanico.patiment.tests;
 
 import java.util.List;
-import td1.jeanico.patiment.modeles.utilisateurs.Employe;
-import td1.jeanico.patiment.services.EmployeService;
+
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Employe;
+import td1.jeanico.patiment.metier.services.EmployeService;
 
 public class EmployeServiceTest {
 

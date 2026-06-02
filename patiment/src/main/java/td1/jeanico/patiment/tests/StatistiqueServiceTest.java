@@ -4,7 +4,7 @@
  */
 package td1.jeanico.patiment.tests;
 
-import td1.jeanico.patiment.services.StatistiqueService;
+import td1.jeanico.patiment.metier.services.StatistiqueService;
 
 /**
  *

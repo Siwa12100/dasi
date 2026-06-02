@@ -1,9 +1,9 @@
-package td1.jeanico.patiment.services;
+package td1.jeanico.patiment.metier.services;
 
 import td1.jeanico.patiment.mappers.MappeurAstroNet;
+import td1.jeanico.patiment.metier.modeles.clients.ProfilAstral;
+import td1.jeanico.patiment.metier.modeles.consultations.Prediction;
 import jakarta.json.JsonObject;
-import td1.jeanico.patiment.modeles.consultations.Prediction;
-import td1.jeanico.patiment.modeles.clients.ProfilAstral;
 import td1.jeanico.patiment.webClients.ClientWebAstroNet;
 
 public class PredictionService {

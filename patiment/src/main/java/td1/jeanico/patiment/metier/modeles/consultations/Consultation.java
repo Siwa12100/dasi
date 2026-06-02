@@ -1,4 +1,4 @@
-package td1.jeanico.patiment.modeles.consultations;
+package td1.jeanico.patiment.metier.modeles.consultations;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -8,9 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import td1.jeanico.patiment.modeles.utilisateurs.Client;
-import td1.jeanico.patiment.modeles.mediums.Medium;
-import td1.jeanico.patiment.modeles.utilisateurs.Employe;
+
+import td1.jeanico.patiment.metier.modeles.mediums.Medium;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Client;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Employe;
 
 @Entity
 public class Consultation implements Serializable {

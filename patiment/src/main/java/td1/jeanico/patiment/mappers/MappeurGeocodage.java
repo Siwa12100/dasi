@@ -3,7 +3,7 @@ package td1.jeanico.patiment.mappers;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
-import td1.jeanico.patiment.modeles.clients.Adresse;
+import td1.jeanico.patiment.metier.modeles.clients.Adresse;
 
 public final class MappeurGeocodage {
 

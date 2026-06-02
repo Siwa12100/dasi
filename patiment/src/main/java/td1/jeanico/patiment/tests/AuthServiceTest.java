@@ -1,7 +1,7 @@
 package td1.jeanico.patiment.tests;
 
-import td1.jeanico.patiment.modeles.utilisateurs.Utilisateur;
-import td1.jeanico.patiment.services.AuthService;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Utilisateur;
+import td1.jeanico.patiment.metier.services.AuthService;
 
 public class AuthServiceTest {
 

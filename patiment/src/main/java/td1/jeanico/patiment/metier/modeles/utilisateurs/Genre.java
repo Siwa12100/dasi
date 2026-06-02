@@ -1,4 +1,4 @@
-package td1.jeanico.patiment.modeles.utilisateurs;
+package td1.jeanico.patiment.metier.modeles.utilisateurs;
 
 public enum Genre {
     HOMME("M"),

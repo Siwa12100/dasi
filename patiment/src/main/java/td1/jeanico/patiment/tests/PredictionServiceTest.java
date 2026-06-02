@@ -4,8 +4,8 @@
  */
 package td1.jeanico.patiment.tests;
 
-import td1.jeanico.patiment.modeles.clients.ProfilAstral;
-import td1.jeanico.patiment.services.PredictionService;
+import td1.jeanico.patiment.metier.modeles.clients.ProfilAstral;
+import td1.jeanico.patiment.metier.services.PredictionService;
 
 /**
  *

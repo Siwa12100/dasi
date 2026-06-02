@@ -2,10 +2,11 @@ package td1.jeanico.patiment.daos;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import td1.jeanico.patiment.modeles.mediums.Astrologue;
-import td1.jeanico.patiment.modeles.mediums.Cartomancien;
-import td1.jeanico.patiment.modeles.mediums.Medium;
-import td1.jeanico.patiment.modeles.mediums.Spirite;
+
+import td1.jeanico.patiment.metier.modeles.mediums.Astrologue;
+import td1.jeanico.patiment.metier.modeles.mediums.Cartomancien;
+import td1.jeanico.patiment.metier.modeles.mediums.Medium;
+import td1.jeanico.patiment.metier.modeles.mediums.Spirite;
 
 public class MediumDao {
 

@@ -6,9 +6,9 @@ package td1.jeanico.patiment.console;
 
 import java.time.LocalDate;
 import td1.jeanico.patiment.daos.JpaUtil;
-import td1.jeanico.patiment.modeles.clients.Adresse;
-import td1.jeanico.patiment.modeles.utilisateurs.Client;
-import td1.jeanico.patiment.modeles.utilisateurs.Genre;
+import td1.jeanico.patiment.metier.modeles.clients.Adresse;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Client;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Genre;
 
 /**
  *

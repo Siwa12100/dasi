@@ -2,8 +2,8 @@ package td1.jeanico.patiment.mappers;
 
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
-import td1.jeanico.patiment.modeles.consultations.Prediction;
-import td1.jeanico.patiment.modeles.clients.ProfilAstral;
+import td1.jeanico.patiment.metier.modeles.clients.ProfilAstral;
+import td1.jeanico.patiment.metier.modeles.consultations.Prediction;
 
 public final class MappeurAstroNet {
 

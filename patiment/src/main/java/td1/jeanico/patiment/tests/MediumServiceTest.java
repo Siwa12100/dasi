@@ -4,8 +4,8 @@
  */
 package td1.jeanico.patiment.tests;
 
-import td1.jeanico.patiment.modeles.mediums.TypeMedium;
-import td1.jeanico.patiment.services.MediumService;
+import td1.jeanico.patiment.metier.modeles.mediums.TypeMedium;
+import td1.jeanico.patiment.metier.services.MediumService;
 
 /**
  *

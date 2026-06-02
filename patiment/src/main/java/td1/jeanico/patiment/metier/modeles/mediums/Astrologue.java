@@ -1,7 +1,8 @@
-package td1.jeanico.patiment.modeles.mediums;
+package td1.jeanico.patiment.metier.modeles.mediums;
 
 import javax.persistence.Entity;
-import td1.jeanico.patiment.modeles.utilisateurs.Genre;
+
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Genre;
 
 @Entity
 public class Astrologue extends Medium {

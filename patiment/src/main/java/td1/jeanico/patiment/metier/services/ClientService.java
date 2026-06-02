@@ -1,14 +1,14 @@
-package td1.jeanico.patiment.services;
+package td1.jeanico.patiment.metier.services;
 
 import td1.jeanico.patiment.mappers.MappeurAstroNet;
-
+import td1.jeanico.patiment.metier.modeles.clients.Adresse;
+import td1.jeanico.patiment.metier.modeles.clients.ProfilAstral;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Client;
 import td1.jeanico.patiment.outils.SupportPersistance;
 
 import java.time.LocalDate;
 import td1.jeanico.patiment.daos.ClientDao;
-import td1.jeanico.patiment.modeles.clients.Adresse;
-import td1.jeanico.patiment.modeles.utilisateurs.Client;
-import td1.jeanico.patiment.modeles.clients.ProfilAstral;
+import td1.jeanico.patiment.outils.AdresseChercheur;
 import td1.jeanico.patiment.outils.Message;
 import td1.jeanico.patiment.webClients.ClientWebAstroNet;
 import jakarta.json.JsonObject;
@@ -17,17 +17,17 @@ public class ClientService extends SupportPersistance {
 
     private final ClientDao clientDao;
     private final ClientWebAstroNet astroNetWebClient;
-    private final GeocodageService geocodageService;
+    private final AdresseChercheur geocodageService;
 
     /**
      * Constructeur par défaut pour un usage applicatif standard.
      */
     public ClientService() {
-        this(new ClientDao(), new ClientWebAstroNet(), new GeocodageService());
+        this(new ClientDao(), new ClientWebAstroNet(), new AdresseChercheur());
     }
     
     public ClientService(ClientDao clientDao, ClientWebAstroNet astroNetWebClient) {
-        this(clientDao, astroNetWebClient, new GeocodageService());
+        this(clientDao, astroNetWebClient, new AdresseChercheur());
     }
 
     /**
@@ -36,7 +36,7 @@ public class ClientService extends SupportPersistance {
      * @param astroNetWebClient
      * @param geocodageService
      */
-    public ClientService(ClientDao clientDao, ClientWebAstroNet astroNetWebClient, GeocodageService geocodageService) {
+    public ClientService(ClientDao clientDao, ClientWebAstroNet astroNetWebClient, AdresseChercheur geocodageService) {
         this.clientDao = clientDao;
         this.astroNetWebClient = astroNetWebClient;
         this.geocodageService = geocodageService;

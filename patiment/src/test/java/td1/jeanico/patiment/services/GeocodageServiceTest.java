@@ -3,7 +3,9 @@ package td1.jeanico.patiment.services;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import org.junit.jupiter.api.Test;
-import td1.jeanico.patiment.modeles.clients.Adresse;
+
+import td1.jeanico.patiment.metier.modeles.clients.Adresse;
+import td1.jeanico.patiment.outils.AdresseChercheur;
 import td1.jeanico.patiment.webClients.ClientWebGeocodage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,7 +28,7 @@ class GeocodageServiceTest {
                                         .add("city", "Paris"))))
                 .build();
 
-        GeocodageService service = new GeocodageService(new FakeClientWebGeocodage(reponse));
+        AdresseChercheur service = new AdresseChercheur(new FakeClientWebGeocodage(reponse));
 
         Adresse adresse = service.rechercherAdresse("20 Rue de la Paix 75002 Paris");
 
@@ -41,7 +43,7 @@ class GeocodageServiceTest {
     @Test
     void rechercherAdresseRetourneNullQuandLeLibelleEstVide() {
         FakeClientWebGeocodage client = new FakeClientWebGeocodage(Json.createObjectBuilder().build());
-        GeocodageService service = new GeocodageService(client);
+        AdresseChercheur service = new AdresseChercheur(client);
 
         Adresse adresse = service.rechercherAdresse("   ");
 
@@ -51,7 +53,7 @@ class GeocodageServiceTest {
 
     @Test
     void rechercherAdresseRetourneNullQuandLeClientLeveUneException() {
-        GeocodageService service = new GeocodageService(new FakeClientWebGeocodage(new RuntimeException("boom")));
+        AdresseChercheur service = new AdresseChercheur(new FakeClientWebGeocodage(new RuntimeException("boom")));
 
         Adresse adresse = service.rechercherAdresse("10 Downing Street");
 
@@ -64,7 +66,7 @@ class GeocodageServiceTest {
                 .add("features", Json.createArrayBuilder())
                 .build();
 
-        GeocodageService service = new GeocodageService(new FakeClientWebGeocodage(reponseSansFeature));
+        AdresseChercheur service = new AdresseChercheur(new FakeClientWebGeocodage(reponseSansFeature));
 
         Adresse adresse = service.rechercherAdresse("Adresse inconnue");
 

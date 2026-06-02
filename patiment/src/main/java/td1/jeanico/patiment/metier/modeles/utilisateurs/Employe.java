@@ -1,4 +1,4 @@
-package td1.jeanico.patiment.modeles.utilisateurs;
+package td1.jeanico.patiment.metier.modeles.utilisateurs;
 
 import java.util.Objects;
 import javax.persistence.Entity;

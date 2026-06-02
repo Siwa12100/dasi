@@ -1,4 +1,4 @@
-package td1.jeanico.patiment.modeles.mediums;
+package td1.jeanico.patiment.metier.modeles.mediums;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -10,7 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import td1.jeanico.patiment.modeles.utilisateurs.Genre;
+
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Genre;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)

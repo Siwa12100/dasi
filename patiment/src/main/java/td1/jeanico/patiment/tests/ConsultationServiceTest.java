@@ -5,12 +5,12 @@ import java.util.function.Supplier;
 import td1.jeanico.patiment.daos.ClientDao;
 import td1.jeanico.patiment.daos.EmployeDao;
 import td1.jeanico.patiment.daos.MediumDao;
-import td1.jeanico.patiment.modeles.consultations.Consultation;
-import td1.jeanico.patiment.modeles.mediums.Medium;
-import td1.jeanico.patiment.modeles.utilisateurs.Client;
-import td1.jeanico.patiment.modeles.utilisateurs.Employe;
+import td1.jeanico.patiment.metier.modeles.consultations.Consultation;
+import td1.jeanico.patiment.metier.modeles.mediums.Medium;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Client;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Employe;
+import td1.jeanico.patiment.metier.services.ConsultationService;
 import td1.jeanico.patiment.outils.SupportPersistance;
-import td1.jeanico.patiment.services.ConsultationService;
 
 public class ConsultationServiceTest {
 

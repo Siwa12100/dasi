@@ -1,4 +1,4 @@
-package td1.jeanico.patiment.modeles.clients;
+package td1.jeanico.patiment.metier.modeles.clients;
 
 import java.io.Serializable;
 import javax.persistence.Embeddable;

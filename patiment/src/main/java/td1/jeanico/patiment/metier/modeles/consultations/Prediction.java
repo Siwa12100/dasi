@@ -1,4 +1,4 @@
-package td1.jeanico.patiment.modeles.consultations;
+package td1.jeanico.patiment.metier.modeles.consultations;
 
 import java.io.Serializable;
 import java.util.Objects;

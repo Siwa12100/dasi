@@ -1,4 +1,4 @@
-package td1.jeanico.patiment.modeles.mediums;
+package td1.jeanico.patiment.metier.modeles.mediums;
 
 public enum TypeMedium {
     Spirite,

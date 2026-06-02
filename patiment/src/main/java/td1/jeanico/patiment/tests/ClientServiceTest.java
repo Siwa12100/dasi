@@ -1,11 +1,12 @@
 package td1.jeanico.patiment.tests;
 
 import java.time.LocalDate;
-import td1.jeanico.patiment.modeles.clients.Adresse;
-import td1.jeanico.patiment.modeles.clients.ProfilAstral;
-import td1.jeanico.patiment.modeles.utilisateurs.Client;
-import td1.jeanico.patiment.modeles.utilisateurs.Genre;
-import td1.jeanico.patiment.services.ClientService;
+
+import td1.jeanico.patiment.metier.modeles.clients.Adresse;
+import td1.jeanico.patiment.metier.modeles.clients.ProfilAstral;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Client;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Genre;
+import td1.jeanico.patiment.metier.services.ClientService;
 
 public class ClientServiceTest {
 

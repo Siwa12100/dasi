@@ -6,7 +6,8 @@ package td1.jeanico.patiment.daos;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import td1.jeanico.patiment.modeles.utilisateurs.Utilisateur;
+
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Utilisateur;
 
 /**
  *

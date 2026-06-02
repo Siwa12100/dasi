@@ -1,4 +1,4 @@
-package td1.jeanico.patiment.services;
+package td1.jeanico.patiment.metier.services;
 
 import td1.jeanico.patiment.outils.SupportPersistance;
 
@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import td1.jeanico.patiment.daos.MediumDao;
-import td1.jeanico.patiment.modeles.mediums.Medium;
-import td1.jeanico.patiment.modeles.mediums.TypeMedium;
+import td1.jeanico.patiment.metier.modeles.mediums.Medium;
+import td1.jeanico.patiment.metier.modeles.mediums.TypeMedium;
 
 public class MediumService extends SupportPersistance {
 
