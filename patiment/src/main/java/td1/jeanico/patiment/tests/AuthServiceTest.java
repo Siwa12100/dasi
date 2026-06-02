@@ -13,9 +13,15 @@ public class AuthServiceTest {
 
     private static AuthService authService;
 
+    /**
+     * Constructeur prive: classe utilitaire de tests statiques.
+     */
     private AuthServiceTest() {
     }
 
+    /**
+     * Point d'entree de la suite de tests console AuthService.
+     */
     public static void lancerTestsAuthService() {
         nbTests = 0;
         nbSucces = 0;
@@ -32,6 +38,9 @@ public class AuthServiceTest {
         System.out.println("=== Bilan AuthService: " + nbSucces + "/" + nbTests + " tests valides ===\n");
     }
 
+    /**
+     * Verifie que l'authentification est refusee quand le mail est vide.
+     */
     public static void test_Authentifier_MailVide() {
         System.out.println("Test : Refuser l'authentification si le mail est vide");
 
@@ -40,6 +49,9 @@ public class AuthServiceTest {
         verifier("authentification refusee", resultat == null);
     }
 
+    /**
+     * Verifie que l'authentification est refusee quand le mot de passe est vide.
+     */
     public static void test_Authentifier_MotDePasseVide() {
         System.out.println("Test : Refuser l'authentification si le mot de passe est vide");
 
@@ -48,6 +60,9 @@ public class AuthServiceTest {
         verifier("authentification refusee", resultat == null);
     }
 
+    /**
+     * Verifie que l'authentification est refusee quand mail et mot de passe sont vides.
+     */
     public static void test_Authentifier_MailEtMotDePasseVides() {
         System.out.println("Test : Refuser l'authentification si mail et mot de passe sont vides");
 
@@ -56,6 +71,9 @@ public class AuthServiceTest {
         verifier("authentification refusee", resultat == null);
     }
 
+    /**
+     * Verifie que des identifiants inconnus retournent null.
+     */
     public static void test_Authentifier_IdentifiantsInconnus() {
         System.out.println("Test : Retourner null si les identifiants sont inconnus");
 
@@ -64,6 +82,9 @@ public class AuthServiceTest {
         verifier("retourne null pour identifiants inconnus", resultat == null);
     }
 
+    /**
+     * Verifie le parcours nominal d'authentification avec un compte initialise en BDD.
+     */
     public static void test_Authentifier_Valide() {
         System.out.println("Test : Authentifier un utilisateur initialise en BDD");
 
@@ -73,6 +94,9 @@ public class AuthServiceTest {
         verifier("mail utilisateur authentifie correct", resultat != null && MAIL_CLIENT_INITIALISE.equalsIgnoreCase(resultat.getMail()));
     }
 
+    /**
+     * Assertion console minimale: incremente les compteurs et affiche le resultat.
+     */
     private static void verifier(String message, boolean condition) {
         nbTests++;
         if (condition) {

@@ -217,8 +217,8 @@ public class ClientService extends SupportPersistance {
                     adresse.getVille()
             );
             if (retourGeoService != null) {
-                adresseValidee = !estVide(retourGeoService.getNumeroDeVoie())
-                        && !estVide(retourGeoService.getNomDeVoie())
+                // Le geocodage peut retourner une adresse approximate sans numero.
+                adresseValidee = !estVide(retourGeoService.getNomDeVoie())
                         && !estVide(retourGeoService.getCodePostal())
                         && !estVide(retourGeoService.getVille());
             }
