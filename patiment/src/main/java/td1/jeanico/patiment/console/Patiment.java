@@ -40,11 +40,33 @@ public class Patiment {
         } else {
             System.out.println("[Patiment] Connexion BDD KO");
         }
+        
+        int choixLancement = 1;
+        switch (choixLancement) {
+            case 1:
+                LanceurScenarios.lancerScenarios();
+                break;
+            case 2:
+                LanceurTestsFonctionnels.lancerTestsFonctionnels();
+                break;
 
-        JpaUtil.creerFabriquePersistance();
-        System.out.println("Debut du projet !");
-        Adresse adresse = new Adresse("1", "Rue de la Paix", "69001", "69", "Lyon");
-        Client c1 = new Client("Client", "numero 1", "mail1", "mdp1", "0600000000", Genre.NON_SPECIFIE, adresse, LocalDate.of(1990, 1, 1));
-        System.out.println("Le con de premier client tiens : " + c1 + "\n");
+            case 3:
+            case 4:
+                lancerApplication();
+                break;
+            default:
+                System.out.println("Choix de lancement invalide."); 
+        }
+    }   
+
+    public static void lancerApplication() {
+        System.out.println("Lancement de l'application...");
+
+        // JpaUtil.creerFabriquePersistance();
+        // System.out.println("Debut du projet !");
+        // Adresse adresse = new Adresse("1", "Rue de la Paix", "69001", "69", "Lyon");
+        // Client c1 = new Client("Client", "numero 1", "mail1", "mdp1", "0600000000", Genre.NON_SPECIFIE, adresse, LocalDate.of(1990, 1, 1));
+        // System.out.println("Le con de premier client tiens : " + c1 + "\n");
+        // Ajouter le code pour lancer l'application ici
     }
 }
