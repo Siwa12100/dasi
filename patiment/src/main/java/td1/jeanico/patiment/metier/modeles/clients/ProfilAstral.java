@@ -6,7 +6,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ProfilAstral implements Serializable {
 
-    private String animalTotal;
+    private String animalTotem;
     private String signeZodiac;
     private String couleurBonheur;
     private String signeChinois;
@@ -14,19 +14,19 @@ public class ProfilAstral implements Serializable {
     public ProfilAstral() {
     }
 
-    public ProfilAstral(String animalTotal, String signeZodiac, String couleurBonheur, String signeChinois) {
-        this.animalTotal = animalTotal;
+    public ProfilAstral(String animalTotem, String signeZodiac, String couleurBonheur, String signeChinois) {
+        this.animalTotem = animalTotem;
         this.signeZodiac = signeZodiac;
         this.couleurBonheur = couleurBonheur;
         this.signeChinois = signeChinois;
     }
 
-    public String getAnimalTotal() {
-        return animalTotal;
+    public String getAnimalTotem() {
+        return animalTotem;
     }
 
-    public void setAnimalTotal(String animalTotal) {
-        this.animalTotal = animalTotal;
+    public void setAnimalTotem(String animalTotem) {
+        this.animalTotem = animalTotem;
     }
 
     public String getSigneZodiac() {
@@ -55,6 +55,6 @@ public class ProfilAstral implements Serializable {
 
     @Override
     public String toString() {
-        return "ProfilAstral{" + "animalTotal=" + animalTotal + ", signeZodiac=" + signeZodiac + ", couleurBonheur=" + couleurBonheur + ", signeChinois=" + signeChinois + '}';
+        return "ProfilAstral{" + "animalTotem=" + animalTotem + ", signeZodiac=" + signeZodiac + ", couleurBonheur=" + couleurBonheur + ", signeChinois=" + signeChinois + '}';
     }
 }

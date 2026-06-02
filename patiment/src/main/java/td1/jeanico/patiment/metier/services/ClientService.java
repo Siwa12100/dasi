@@ -200,6 +200,7 @@ public class ClientService extends SupportPersistance {
                 && !estVide(client.getMotDePasse())
                 && !estVide(client.getTelephone())
                 && client.getDateNaissance() != null
+                && client.getDateNaissance().isBefore(LocalDate.now())
                 && possedeAdresseValide(client.getAdresse());
     }
 
