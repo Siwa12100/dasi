@@ -15,32 +15,7 @@ import td1.jeanico.patiment.modeles.utilisateurs.Genre;
  * @author ncolomb
  */
 public class Patiment {
-
-    private static void definirConnexionParDefaut() {
-        // setIfBlank(JpaUtil.PROPRIETE_URL_JDBC, "jdbc:mysql://localhost:3306/DASI-DB?zeroDateTimeBehavior=CONVERT_TO_NULL");
-        setIfBlank(JpaUtil.PROPRIETE_URL_JDBC, "jdbc:mysql://dasi-mariadb:3306/DASI-DB?zeroDateTimeBehavior=CONVERT_TO_NULL");
-        setIfBlank(JpaUtil.PROPRIETE_UTILISATEUR_JDBC, "dasi");
-        setIfBlank(JpaUtil.PROPRIETE_MOT_DE_PASSE_JDBC, "dasi");
-        setIfBlank(JpaUtil.PROPRIETE_PILOTE_JDBC, "com.mysql.cj.jdbc.Driver");
-    }
-
-    private static void setIfBlank(String key, String value) {
-        String currentValue = System.getProperty(key);
-        if (currentValue == null || currentValue.isBlank()) {
-            System.setProperty(key, value);
-        }
-    }
-
     public static void main(String[] args) {
-        definirConnexionParDefaut();
-
-        boolean connexionBddOk = JpaUtil.testerConnexionJdbc();
-        if (connexionBddOk) {
-            System.out.println("[Patiment] Connexion BDD OK");
-        } else {
-            System.out.println("[Patiment] Connexion BDD KO");
-        }
-
         JpaUtil.creerFabriquePersistance();
         System.out.println("Debut du projet !");
         Adresse adresse = new Adresse("1", "Rue de la Paix", "69001", "69", "Lyon");

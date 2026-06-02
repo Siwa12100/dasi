@@ -26,7 +26,7 @@ public class ConsultationDao {
     public List<Consultation> listerParDateDesc() {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.createQuery(
-                "SELECT c FROM Consultation c ORDER BY c.date DESC",
+                "SELECT c FROM Consultation c ORDER BY c.dateDemande DESC",
                 Consultation.class
         ).getResultList();
     }
@@ -34,7 +34,7 @@ public class ConsultationDao {
     public List<Consultation> trouverParClient(Client client) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.createQuery(
-                "SELECT c FROM Consultation c WHERE c.client = :client ORDER BY c.date DESC",
+                "SELECT c FROM Consultation c WHERE c.client = :client ORDER BY c.dateDemande DESC",
                 Consultation.class
         ).setParameter("client", client)
                 .getResultList();
@@ -43,7 +43,7 @@ public class ConsultationDao {
     public List<Consultation> trouverEnCoursParEmploye(Employe employe) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.createQuery(
-                "SELECT c FROM Consultation c WHERE c.employe = :employe AND c.estTermine = FALSE ORDER BY c.date DESC",
+                "SELECT c FROM Consultation c WHERE c.employe = :employe AND c.estTermine = FALSE ORDER BY c.dateDemande DESC",
                 Consultation.class
         ).setParameter("employe", employe)
                 .getResultList();

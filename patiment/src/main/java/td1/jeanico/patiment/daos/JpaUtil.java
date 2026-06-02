@@ -4,9 +4,6 @@
  */
 package td1.jeanico.patiment.daos;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -33,10 +30,6 @@ public class JpaUtil {
      * (cf.&nbsp;persistence.xml)</strong>
      */
     public static final String PERSISTENCE_UNIT_NAME = "td1_jeanico_patiment_pu";
-    public static final String PROPRIETE_URL_JDBC = "patiment.jdbc.url";
-    public static final String PROPRIETE_UTILISATEUR_JDBC = "patiment.jdbc.user";
-    public static final String PROPRIETE_MOT_DE_PASSE_JDBC = "patiment.jdbc.password";
-    public static final String PROPRIETE_PILOTE_JDBC = "patiment.jdbc.driver";
     /**
      * Factory de Entity Manager liée à l'unité de persistance.
      * <br/><strong>Vérifier le nom de l'unité de persistance indiquée dans
@@ -72,7 +65,7 @@ public class JpaUtil {
             System.out.println("[JpaUtil:Log] " + message);
         }
     }
-
+    
     /**
      * Méthode pour désactiver l'affichage du Log de JpaUtil.
      * À utiliser avant la méthode <code>creerFabriquePersistance()</code> pour
@@ -93,50 +86,11 @@ public class JpaUtil {
         if (entityManagerFactory != null) {
             entityManagerFactory.close();
         }
-        Map<String, String> proprietesJpa = new HashMap<>();
-        String urlJdbc = System.getProperty(PROPRIETE_URL_JDBC);
-        String utilisateurJdbc = System.getProperty(PROPRIETE_UTILISATEUR_JDBC);
-        String motDePasseJdbc = System.getProperty(PROPRIETE_MOT_DE_PASSE_JDBC);
-        String piloteJdbc = System.getProperty(PROPRIETE_PILOTE_JDBC);
-
-        if (urlJdbc != null && !urlJdbc.isBlank()) {
-            proprietesJpa.put("javax.persistence.jdbc.url", urlJdbc);
-        }
-        if (utilisateurJdbc != null && !utilisateurJdbc.isBlank()) {
-            proprietesJpa.put("javax.persistence.jdbc.user", utilisateurJdbc);
-        }
-        if (motDePasseJdbc != null && !motDePasseJdbc.isBlank()) {
-            proprietesJpa.put("javax.persistence.jdbc.password", motDePasseJdbc);
-        }
-        if (piloteJdbc != null && !piloteJdbc.isBlank()) {
-            proprietesJpa.put("javax.persistence.jdbc.driver", piloteJdbc);
-        }
-
+        Map<String, String> propertyMap = new HashMap<>();
         if (!JPAUTIL_LOG_ACTIVE) {
-            proprietesJpa.put("eclipselink.logging.level", "OFF");
+            propertyMap.put("eclipselink.logging.level", "OFF");
         }
-        entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME,proprietesJpa);
-    }
-
-    public static boolean testerConnexionJdbc() {
-        return testerConnexionJdbc(
-                System.getProperty(PROPRIETE_URL_JDBC),
-                System.getProperty(PROPRIETE_UTILISATEUR_JDBC),
-                System.getProperty(PROPRIETE_MOT_DE_PASSE_JDBC)
-        );
-    }
-
-    public static boolean testerConnexionJdbc(String urlJdbc, String utilisateurJdbc, String motDePasseJdbc) {
-        if (urlJdbc == null || urlJdbc.isBlank() || utilisateurJdbc == null || utilisateurJdbc.isBlank()) {
-            log("Impossible de tester la connexion JDBC: paramètres manquants");
-            return false;
-        }
-        try (Connection connection = DriverManager.getConnection(urlJdbc, utilisateurJdbc, motDePasseJdbc == null ? "" : motDePasseJdbc)) {
-            return connection.isValid(2);
-        } catch (SQLException ex) {
-            log("Echec de connexion JDBC: " + ex.getMessage());
-            return false;
-        }
+        entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME,propertyMap);
     }
 
     /**
@@ -176,6 +130,7 @@ public class JpaUtil {
     /**
      * Démarre une transaction sur l'instance courante du Contexte de Persistance (Entity Manager).
      * <br><strong>À utiliser uniquement au niveau Service.</strong>
+     * @throws java.lang.Exception
      */
     public static void ouvrirTransaction() throws Exception {
         log("Ouverture de la transaction (begin)");
@@ -193,6 +148,7 @@ public class JpaUtil {
      * <br><strong>À utiliser uniquement au niveau Service.</strong>
      *
      * @exception RollbackException lorsque le <em>commit</em> n'a pas réussi.
+     * @throws java.lang.Exception
      */
     public static void validerTransaction() throws RollbackException, Exception {
         log("Validation de la transaction (commit)");
@@ -235,13 +191,5 @@ public class JpaUtil {
     protected static EntityManager obtenirContextePersistance() {
         log("Obtention du contexte de persistance");
         return threadLocalEntityManager.get();
-    }
-
-    public static EntityManager obtenirContextePersistancePourTests() {
-        return obtenirContextePersistance();
-    }
-
-    public static boolean contextePersistanceDisponible() {
-        return threadLocalEntityManager.get() != null;
     }
 }

@@ -13,16 +13,11 @@ public abstract class SupportPersistance {
      * @return 
      */
     protected <T> T executerLecture(Supplier<T> action) {
-        boolean contexteExistant = JpaUtil.contextePersistanceDisponible();
-        if (!contexteExistant) {
-            JpaUtil.creerContextePersistance();
-        }
+        JpaUtil.creerContextePersistance();
         try {
             return action.get();
         } finally {
-            if (!contexteExistant) {
-                JpaUtil.fermerContextePersistance();
-            }
+            JpaUtil.fermerContextePersistance();
         }
     }
 
@@ -45,10 +40,7 @@ public abstract class SupportPersistance {
      * @return 
      */
     protected <T> T executerEnTransaction(Supplier<T> action) {
-        boolean contexteExistant = JpaUtil.contextePersistanceDisponible();
-        if (!contexteExistant) {
-            JpaUtil.creerContextePersistance();
-        }
+        JpaUtil.creerContextePersistance();
         try {
             JpaUtil.ouvrirTransaction();
             T resultat = action.get();
@@ -59,9 +51,7 @@ public abstract class SupportPersistance {
             JpaUtil.annulerTransaction();
             throw new RuntimeException("Erreur lors de l'execution du service", ex);
         } finally {
-            if (!contexteExistant) {
-                JpaUtil.fermerContextePersistance();
-            }
+            JpaUtil.fermerContextePersistance();
         }
     }
 
