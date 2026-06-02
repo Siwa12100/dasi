@@ -17,22 +17,29 @@ public class ClientService extends SupportPersistance {
 
     private final ClientDao clientDao;
     private final ClientWebAstroNet astroNetWebClient;
+    private final GeocodageService geocodageService;
 
     /**
      * Constructeur par défaut pour un usage applicatif standard.
      */
     public ClientService() {
-        this(new ClientDao(), new ClientWebAstroNet());
+        this(new ClientDao(), new ClientWebAstroNet(), new GeocodageService());
+    }
+    
+    public ClientService(ClientDao clientDao, ClientWebAstroNet astroNetWebClient) {
+        this(clientDao, astroNetWebClient, new GeocodageService());
     }
 
     /**
      * Constructeur injectable pour les tests et la configuration avancée.
      * @param clientDao
      * @param astroNetWebClient
+     * @param geocodageService
      */
-    public ClientService(ClientDao clientDao, ClientWebAstroNet astroNetWebClient) {
+    public ClientService(ClientDao clientDao, ClientWebAstroNet astroNetWebClient, GeocodageService geocodageService) {
         this.clientDao = clientDao;
         this.astroNetWebClient = astroNetWebClient;
+        this.geocodageService = geocodageService;
     }
 
     /**
@@ -45,9 +52,6 @@ public class ClientService extends SupportPersistance {
         if (!aInformationsInscriptionValides(client)) {
             return false;
         }
-        
-        // TODO: check address with Geocoding API
-        // return false in cas of errors
 
         boolean inscriptionReussie;
         try {
@@ -196,19 +200,31 @@ public class ClientService extends SupportPersistance {
                 && !estVide(client.getMotDePasse())
                 && !estVide(client.getTelephone())
                 && client.getDateNaissance() != null
-                && aAdresseValide(client.getAdresse());
+                && possedeAdresseValide(client.getAdresse());
     }
 
     /**
      * Vérifie la complétude de l'adresse du client.
      */
-    private boolean aAdresseValide(Adresse adresse) {
-        return adresse != null
-                && !estVide(adresse.getNumeroDeVoie())
-                && !estVide(adresse.getNomDeVoie())
-                && !estVide(adresse.getCodePostal())
-                && !estVide(adresse.getCodeDepartement())
-                && !estVide(adresse.getVille());
+    private boolean possedeAdresseValide(Adresse adresse) {
+        boolean adresseValidee = false;
+        try {
+            Adresse retourGeoService = this.geocodageService.rechercherAdresse(
+                    adresse.getNumeroDeVoie() + " " +
+                    adresse.getNomDeVoie() + " " +
+                    adresse.getCodePostal() + " " +
+                    adresse.getVille()
+            );
+            if (retourGeoService != null) {
+                adresseValidee = !estVide(retourGeoService.getNumeroDeVoie())
+                        && !estVide(retourGeoService.getNomDeVoie())
+                        && !estVide(retourGeoService.getCodePostal())
+                        && !estVide(retourGeoService.getVille());
+            }
+        } catch (Exception e) {
+            adresseValidee = false;
+        }
+        return adresseValidee;
     }
 
     /**

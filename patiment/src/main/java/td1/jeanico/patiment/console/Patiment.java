@@ -17,7 +17,8 @@ import td1.jeanico.patiment.modeles.utilisateurs.Genre;
 public class Patiment {
 
     private static void definirConnexionParDefaut() {
-        setIfBlank(JpaUtil.PROPRIETE_URL_JDBC, "jdbc:mysql://localhost:3306/DASI-DB?zeroDateTimeBehavior=CONVERT_TO_NULL");
+        // setIfBlank(JpaUtil.PROPRIETE_URL_JDBC, "jdbc:mysql://localhost:3306/DASI-DB?zeroDateTimeBehavior=CONVERT_TO_NULL");
+        setIfBlank(JpaUtil.PROPRIETE_URL_JDBC, "jdbc:mysql://dasi-mariadb:3306/DASI-DB?zeroDateTimeBehavior=CONVERT_TO_NULL");
         setIfBlank(JpaUtil.PROPRIETE_UTILISATEUR_JDBC, "dasi");
         setIfBlank(JpaUtil.PROPRIETE_MOT_DE_PASSE_JDBC, "dasi");
         setIfBlank(JpaUtil.PROPRIETE_PILOTE_JDBC, "com.mysql.cj.jdbc.Driver");
