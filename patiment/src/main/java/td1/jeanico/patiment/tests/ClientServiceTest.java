@@ -19,9 +19,15 @@ public class ClientServiceTest {
 
     private static ClientService clientService;
 
+    /**
+     * Constructeur prive: classe utilitaire de tests statiques.
+     */
     private ClientServiceTest() {
     }
 
+    /**
+     * Point d'entree de la suite de tests console ClientService.
+     */
     public static void lancerTestsClientService() {
         nbTests = 0;
         nbSucces = 0;
@@ -39,6 +45,9 @@ public class ClientServiceTest {
         System.out.println("=== Bilan ClientService: " + nbSucces + "/" + nbTests + " tests valides ===\n");
     }
 
+    /**
+     * Verifie qu'une inscription valide est acceptee et enrichie (id + profil astral).
+     */
     public static void test_Inscrire_Client_Valide() {
         System.out.println("Test : Inscrire un client avec des données valides");
 
@@ -50,6 +59,9 @@ public class ClientServiceTest {
         verifier("profil astral renseigne", client.getProfilAstral() != null);
     }
 
+    /**
+     * Verifie qu'une seconde inscription avec le meme mail est refusee.
+     */
     public static void test_Inscrire_Client_DoublonMail() {
         System.out.println("Test : Refuser l'inscription si mail deja existant");
 
@@ -64,6 +76,9 @@ public class ClientServiceTest {
         verifier("inscription doublon refusee", !secondeInscription);
     }
 
+    /**
+     * Verifie le parcours nominal d'authentification d'un client initialise en BDD.
+     */
     public static void test_Authentifier_Client_Valide() {
         System.out.println("Test : Authentifier un client valide initialise en BDD");
 
@@ -73,6 +88,9 @@ public class ClientServiceTest {
         verifier("mail client authentifie correct", resultat != null && MAIL_CLIENT_INITIALISE.equalsIgnoreCase(resultat.getMail()));
     }
 
+    /**
+     * Verifie que la consultation du profil astral retourne un profil complet.
+     */
     public static void test_ConsulterProfilAstral_ClientExistant() {
         System.out.println("Test : Consulter le profil astral d'un client initialise en BDD");
 
@@ -88,6 +106,9 @@ public class ClientServiceTest {
         }
     }
 
+    /**
+     * Verifie qu'un client initialise est recuperable par son identifiant.
+     */
     public static void test_RecupererClientParId() {
         System.out.println("Test : Recuperer un client initialise en BDD par son id");
 
@@ -102,6 +123,9 @@ public class ClientServiceTest {
         }
     }
 
+    /**
+     * Assertion console minimale: incremente les compteurs et affiche le resultat.
+     */
     private static void verifier(String message, boolean condition) {
         nbTests++;
         if (condition) {
@@ -112,6 +136,9 @@ public class ClientServiceTest {
         }
     }
 
+    /**
+     * Construit un client valide pour les scenarios d'inscription.
+     */
     private static Client clientValide(String mail) {
         Client client = new Client(
                 "Doe",
@@ -126,18 +153,26 @@ public class ClientServiceTest {
         return client;
     }
 
+    /**
+     * Retourne une adresse complete exploitable pour l'inscription.
+     */
     private static Adresse adresseValide() {
         return new Adresse("20", "Rue de la Paix", "75002", "75", "Paris");
     }
 
+    /**
+     * Genere un mail unique pour eviter les collisions entre executions.
+     */
     private static String mailUnique(String prefix) {
         String mail = prefix + "." + System.currentTimeMillis() + "." + sequenceMail + "@test.fr";
         sequenceMail++;
         return mail;
     }
 
+    /**
+     * Indique si une chaine est nulle ou vide.
+     */
     private static boolean estVide(String valeur) {
         return valeur == null || valeur.isBlank();
     }
-
 }

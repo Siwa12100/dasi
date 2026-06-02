@@ -13,9 +13,15 @@ public class EmployeServiceTest {
     private static int nbSucces = 0;
     private static EmployeService employeService;
 
+    /**
+     * Constructeur prive: classe utilitaire de tests statiques.
+     */
     private EmployeServiceTest() {
     }
 
+    /**
+     * Point d'entree de la suite de tests console EmployeService.
+     */
     public static void lancerTestsEmployeService() {
         nbTests = 0;
         nbSucces = 0;
@@ -32,6 +38,9 @@ public class EmployeServiceTest {
         System.out.println("=== Bilan EmployeService: " + nbSucces + "/" + nbTests + " tests valides ===\n");
     }
 
+    /**
+     * Verifie que recupererEmployeParId retourne null si l'id est null.
+     */
     public static void test_RecupererEmployeParId_IdNull() {
         System.out.println("Test : Retourner null si l'id employe est null");
 
@@ -40,6 +49,9 @@ public class EmployeServiceTest {
         verifier("retourne null", resultat == null);
     }
 
+    /**
+     * Verifie que recupererEmployeParId retourne null pour un id inexistant.
+     */
     public static void test_RecupererEmployeParId_IdInexistant() {
         System.out.println("Test : Retourner null si l'id employe est inexistant");
 
@@ -48,6 +60,9 @@ public class EmployeServiceTest {
         verifier("retourne null pour id inexistant", resultat == null);
     }
 
+    /**
+     * Verifie le parcours nominal de recuperation d'un employe initialise par son id.
+     */
     public static void test_RecupererEmployeParId_Valide() {
         System.out.println("Test : Recuperer un employe initialise en BDD par son id");
 
@@ -63,6 +78,9 @@ public class EmployeServiceTest {
         }
     }
 
+    /**
+     * Verifie que la liste des employes est toujours non nulle.
+     */
     public static void test_ListerEmployes_RetourneListeNonNulle() {
         System.out.println("Test : Retourner une liste non nulle des employes");
 
@@ -71,6 +89,9 @@ public class EmployeServiceTest {
         verifier("liste retournee non nulle", resultat != null);
     }
 
+    /**
+     * Verifie qu'un employe initialise est bien present dans la liste retournee.
+     */
     public static void test_ListerEmployes_ContientEmployeCree() {
         System.out.println("Test : La liste des employes contient un employe initialise en BDD");
 
@@ -86,6 +107,9 @@ public class EmployeServiceTest {
         verifier("liste contient l'employe initialise", contient);
     }
 
+    /**
+     * Retrouve un employe initialise en BDD a partir de son mail connu.
+     */
     private static Employe employeInitialise() {
         return employeService.listerEmployes().stream()
                 .filter(e -> e.getMail() != null && MAIL_EMPLOYE_INITIALISE.equalsIgnoreCase(e.getMail()))
@@ -93,6 +117,9 @@ public class EmployeServiceTest {
                 .orElse(null);
     }
 
+    /**
+     * Assertion console minimale: incremente les compteurs et affiche le resultat.
+     */
     private static void verifier(String message, boolean condition) {
         nbTests++;
         if (condition) {
