@@ -110,6 +110,9 @@ public class LanceurInitialisationBdd extends SupportPersistance {
             } else {
                 System.out.println("INFO: Les clients existent déjà");
             }
+
+            // Garantir la présence des clients de démonstration pour l'IHM console et les tests.
+            assurerClientDemo(clientDao);
             
             // Initialiser les consultations
             if (consultationDao.listerParDateDesc().isEmpty()) {
@@ -226,6 +229,36 @@ public class LanceurInitialisationBdd extends SupportPersistance {
                 System.err.println("WARN: Erreur lors de la création du client " + (i + 1) + ": " + e.getMessage());
             }
         }
+    }
+
+    private void assurerClientDemo(ClientDao clientDao) {
+        creerClientDemoSiAbsent(clientDao,
+                "BOIL", "Arthur", "arthur@free.fr", "arthur123", "0400000001", Genre.HOMME,
+                new Adresse("52", "impasse des Buits", "01000", "01", "Bourg-en-Bresse"),
+                LocalDate.of(1994, 3, 18),
+                new ProfilAstral("Loup", "Poissons", "Bleu", "Chien"));
+
+        creerClientDemoSiAbsent(clientDao,
+                "FRUIT", "Robin", "robin@orange.fr", "robin123", "0400000002", Genre.HOMME,
+                new Adresse("52", "impasse des Buits", "01000", "01", "Bourg-en-Bresse"),
+                LocalDate.of(1988, 7, 9),
+                new ProfilAstral("Renard", "Cancer", "Vert", "Tigre"));
+
+        creerClientDemoSiAbsent(clientDao,
+                "IMMO", "Maxime", "maxime@sfr.fr", "maxime123", "0400000003", Genre.NON_SPECIFIE,
+                new Adresse("66", "avenue des cieux", "69000", "69", "Lyon"),
+                LocalDate.of(1998, 11, 24),
+                new ProfilAstral("Aigle", "Sagittaire", "Rouge", "Cheval"));
+    }
+
+    private void creerClientDemoSiAbsent(ClientDao clientDao,
+            String nom, String prenom, String mail, String motDePasse, String telephone,
+            Genre genre, Adresse adresse, LocalDate dateNaissance, ProfilAstral profilAstral) {
+        if (clientDao.trouverParMail(mail) != null) {
+            return;
+        }
+        clientDao.creer(new Client(nom, prenom, mail, motDePasse, telephone, genre, adresse, dateNaissance, profilAstral));
+        System.out.println("Client de démonstration créé: " + mail);
     }
 
     /**
