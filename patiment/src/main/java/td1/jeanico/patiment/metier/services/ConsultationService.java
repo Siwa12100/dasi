@@ -29,7 +29,6 @@ public class ConsultationService extends SupportPersistance {
      * Constructeur injectable pour tests/intégration.
      * @param consultationDao
      * @param employeDao
-     * @param mediumDao
      */
     public ConsultationService(ConsultationDao consultationDao, EmployeDao employeDao) {
         this.consultationDao = consultationDao;

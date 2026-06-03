@@ -3,7 +3,6 @@ package td1.jeanico.patiment.daos;
 import java.util.List;
 import javax.persistence.EntityManager;
 
-import td1.jeanico.patiment.metier.modeles.consultations.Consultation;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Employe;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Genre;
 
