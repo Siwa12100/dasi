@@ -1,12 +1,7 @@
 package td1.jeanico.patiment.scenarios;
 
-import java.time.LocalDate;
-import td1.jeanico.patiment.daos.ClientDao;
-import td1.jeanico.patiment.daos.EmployeDao;
-import td1.jeanico.patiment.metier.modeles.clients.Adresse;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Client;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Employe;
-import td1.jeanico.patiment.metier.modeles.utilisateurs.Genre;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Utilisateur;
 import td1.jeanico.patiment.metier.services.AuthService;
 

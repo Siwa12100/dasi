@@ -596,7 +596,7 @@ public class LanceurAppConsole {
      * Retourne une adresse simple et valide pour accelerer les tests manuels.
      */
     private static Adresse adresseParDefaut() {
-        return new Adresse("52", "impasse des Buits", "01000", "01", "Bourg-en-Bresse");
+        return new Adresse("67", "Impasse des Moissons", "01000", "01", "Saint Denis lès Bourg");
     }
 
     /**

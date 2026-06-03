@@ -34,7 +34,7 @@ public class ClientService extends SupportPersistance {
      * Constructeur injectable pour les tests et la configuration avancée.
      * @param clientDao
      * @param astroNetWebClient
-     * @param geocodageService
+     * @param adresseChercheur
      */
     public ClientService(ClientDao clientDao, ClientWebAstroNet astroNetWebClient, AdresseChercheur adresseChercheur) {
         this.clientDao = clientDao;
