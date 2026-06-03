@@ -7,6 +7,7 @@ import java.util.Random;
 import td1.jeanico.patiment.daos.ClientDao;
 import td1.jeanico.patiment.daos.ConsultationDao;
 import td1.jeanico.patiment.daos.EmployeDao;
+import td1.jeanico.patiment.daos.JpaUtil;
 import td1.jeanico.patiment.daos.MediumDao;
 import td1.jeanico.patiment.metier.modeles.clients.Adresse;
 import td1.jeanico.patiment.metier.modeles.clients.ProfilAstral;
@@ -74,8 +75,10 @@ public class LanceurInitialisationBdd extends SupportPersistance {
     };
 
     public static void main(String[] args) {
+        JpaUtil.creerFabriquePersistance();
         LanceurInitialisationBdd lanceur = new LanceurInitialisationBdd();
         lanceur.lancementInitialisationBdd();
+        JpaUtil.fermerFabriquePersistance();
     }
 
     public void lancementInitialisationBdd() {

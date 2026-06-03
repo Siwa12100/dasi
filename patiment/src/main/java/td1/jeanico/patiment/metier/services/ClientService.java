@@ -223,7 +223,8 @@ public class ClientService extends SupportPersistance {
                         && !estVide(retourGeoService.getCodePostal())
                         && !estVide(retourGeoService.getVille())
                         && retourGeoService.getNumeroDeVoie().equals(adresse.getNumeroDeVoie())
-                        && retourGeoService.getCodePostal().equals(adresse.getCodePostal());
+                        && retourGeoService.getCodePostal().equals(adresse.getCodePostal())
+                        && retourGeoService.getCodeDepartement().equals(adresse.getCodeDepartement());
             }
         } catch (Exception e) {
             adresseValidee = false;
