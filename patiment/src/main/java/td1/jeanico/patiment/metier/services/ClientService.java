@@ -36,10 +36,10 @@ public class ClientService extends SupportPersistance {
      * @param astroNetWebClient
      * @param geocodageService
      */
-    public ClientService(ClientDao clientDao, ClientWebAstroNet astroNetWebClient, AdresseChercheur geocodageService) {
+    public ClientService(ClientDao clientDao, ClientWebAstroNet astroNetWebClient, AdresseChercheur adresseChercheur) {
         this.clientDao = clientDao;
         this.astroNetWebClient = astroNetWebClient;
-        this.geocodageService = geocodageService;
+        this.geocodageService = adresseChercheur;
     }
 
     /**
