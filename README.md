@@ -24,3 +24,14 @@ Tous les tests avec BDD
 
 Vérifier l’appli main
 ./mvnw -DskipTests exec:java
+
+## comptes fakes pour cli
+
+Client:
+arthur@free.fr / arthur123
+
+Employé:
+anna@predictif.fr / anna123
+
+Le compte client arthur@free.fr est désormais créé explicitement par l'initialisation console.
+
