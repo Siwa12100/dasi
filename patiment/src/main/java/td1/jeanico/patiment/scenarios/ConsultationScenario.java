@@ -2,17 +2,17 @@ package td1.jeanico.patiment.scenarios;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
 import td1.jeanico.patiment.metier.modeles.clients.Adresse;
 import td1.jeanico.patiment.metier.modeles.consultations.Consultation;
 import td1.jeanico.patiment.metier.modeles.mediums.Medium;
-import td1.jeanico.patiment.metier.modeles.mediums.Astrologue;
-import td1.jeanico.patiment.metier.modeles.mediums.TypeMedium;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Client;
+import td1.jeanico.patiment.metier.modeles.utilisateurs.Employe;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Genre;
 import td1.jeanico.patiment.metier.services.ClientService;
 import td1.jeanico.patiment.metier.services.ConsultationService;
+import td1.jeanico.patiment.metier.services.EmployeService;
 import td1.jeanico.patiment.metier.services.MediumService;
-import td1.jeanico.patiment.metier.modeles.consultations.Consultation;
 
 /**
  * Scénarios de tests pour les consultations
@@ -22,6 +22,7 @@ public class ConsultationScenario {
 
     private static ClientService clientService;
     private static ConsultationService consultationService;
+    private static EmployeService employeService;
     private static MediumService mediumService;
     
 
@@ -30,10 +31,12 @@ public class ConsultationScenario {
 
         clientService = new ClientService();
         consultationService = new ConsultationService();
+        employeService = new EmployeService();
         mediumService = new MediumService();
         
 
         scenarioDemandeConsultationValideEtRedemande();
+        scenarioDemandeConsultationValidePasDispo();
         scenarioDemandeConsultationClientNull();
         scenarioDemandeConsultationMediumNull();
         scenarioDemandeConsultationClientEtMediumNull();
@@ -134,9 +137,49 @@ public class ConsultationScenario {
      */
     public static void scenarioDemandeConsultationValidePasDispo() {
         System.out.println("\n=> Scénario : Demande de consultation valide mais pas de dispo");
-        
-        // TODO
-        
+
+        Client client = preparerClient();
+        if (client == null) {
+            System.out.println("   ❌ ECHEC : Impossible de préparer les données");
+            return;
+        }
+
+        Medium medium = trouverMediumAvecLePlusDEmployesDisponibles();
+        if (medium == null) {
+            System.out.println("   ⚠️  Aucun medium ne permet de faire plusieurs consultations");
+            return;
+        }
+
+        int disponibles = compterEmployesCompatiblesDisponibles(medium);
+        if (disponibles < 1) {
+            System.out.println("   ⚠️  Pas assez d'employés compatibles disponibles pour tester le cas d'épuisement");
+            System.out.println("   ℹ️  Employés compatibles disponibles : " + disponibles);
+            return;
+        }
+
+        System.out.println("   - Medium choisi : " + medium.getDenomination() + " (genre=" + medium.getGenre() + ")");
+        System.out.println("   - Employés compatibles disponibles au départ : " + disponibles);
+
+        List<Consultation> consultations = new ArrayList<>();
+        for (int i = 0; i < disponibles; i++) {
+            Consultation consultation = consultationService.demanderConsultation(client, medium);
+            if (consultation == null) {
+                System.out.println("   ❌ ECHEC : Une consultation intermédiaire a échoué avant l'épuisement complet");
+                return;
+            }
+            consultations.add(consultation);
+            System.out.println("   ✅ Consultation " + (i + 1) + " créée avec l'employé "
+                    + consultation.getEmploye().getPrenom() + " " + consultation.getEmploye().getNom());
+        }
+
+        Consultation consultationSupplementaire = consultationService.demanderConsultation(client, medium);
+        if (consultationSupplementaire == null) {
+            System.out.println("   ✅ SUCCES : La demande supplémentaire a bien échoué car aucun employé compatible n'est disponible");
+        } else {
+            System.out.println("   ❌ ECHEC : Une consultation a encore été créée alors que les employés compatibles devaient être épuisés");
+        }
+
+        System.out.println("   - Total de consultations créées pendant le scénario : " + consultations.size());
     }
 
     /**
@@ -219,5 +262,43 @@ public class ConsultationScenario {
         for (Consultation c : consultations) {
             System.out.println("      - " + c.getDate() + " | Medium=" + c.getMedium().getDenomination() + " | Employe=" + (c.getEmploye() == null ? "-" : c.getEmploye().getPrenom() + " " + c.getEmploye().getNom()));
         }
+    }
+
+    private static Medium trouverMediumAvecLePlusDEmployesDisponibles() {
+        List<Medium> mediums = mediumService.listerMediums();
+        if (mediums == null || mediums.isEmpty()) {
+            return null;
+        }
+
+        Medium meilleurMedium = null;
+        int meilleurScore = -1;
+        for (Medium medium : mediums) {
+            int score = compterEmployesCompatiblesDisponibles(medium);
+            if (score > meilleurScore) {
+                meilleurScore = score;
+                meilleurMedium = medium;
+            }
+        }
+        return meilleurMedium;
+    }
+
+    private static int compterEmployesCompatiblesDisponibles(Medium medium) {
+        if (medium == null || medium.getGenre() == null) {
+            return 0;
+        }
+        List<Employe> employes = employeService.listerEmployes();
+        if (employes == null || employes.isEmpty()) {
+            return 0;
+        }
+
+        int compteur = 0;
+        for (Employe employe : employes) {
+            if (employe != null
+                    && employe.isEstDisponible()
+                    && employe.getGenre() == medium.getGenre()) {
+                compteur++;
+            }
+        }
+        return compteur;
     }
 }
