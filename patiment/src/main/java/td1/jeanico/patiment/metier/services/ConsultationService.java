@@ -43,12 +43,12 @@ public class ConsultationService extends SupportPersistance {
      * @param medium
      * @return 
      */
-    public boolean demanderConsultation(Client client, Medium medium) {
+    public Consultation demanderConsultation(Client client, Medium medium) {
         if (client == null || medium == null) {
-            return false;
+            return null;
         }
 
-        Employe employeAffecte = executerEnTransaction(() -> {
+        Consultation consultationAffecte = executerEnTransaction(() -> {
             Employe employe = employeDao.trouverEmployeCompatible(medium.getGenre());
             if (employe == null) {
                 return null;
@@ -60,22 +60,22 @@ public class ConsultationService extends SupportPersistance {
 
             Consultation consultation = new Consultation("", LocalDateTime.now(), false, client, employe, medium);
             consultationDao.creer(consultation);
-            return employe;
+            return consultation;
         });
 
-        if (employeAffecte == null) {
-            return false;
+        if (consultationAffecte == null || consultationAffecte.getEmploye() == null) {
+            return null;
         }
 
         Message.envoyerNotification(
-                employeAffecte.getTelephone(),
-                "Bonjour " + securiser(employeAffecte.getPrenom()) + ". Consultation requise pour "
+                consultationAffecte.getEmploye().getTelephone(),
+                "Bonjour " + securiser(consultationAffecte.getEmploye().getPrenom()) + ". Consultation requise pour "
                 + formatNomComplet(client)
                 + ". Medium a incarner : "
                 + securiser(medium.getDenomination())
         );
 
-        return true;
+        return consultationAffecte;
     }
     
     /**

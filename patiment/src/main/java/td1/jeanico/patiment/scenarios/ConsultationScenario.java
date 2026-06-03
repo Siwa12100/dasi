@@ -12,7 +12,7 @@ import td1.jeanico.patiment.metier.modeles.utilisateurs.Genre;
 import td1.jeanico.patiment.metier.services.ClientService;
 import td1.jeanico.patiment.metier.services.ConsultationService;
 import td1.jeanico.patiment.metier.services.MediumService;
-import td1.jeanico.patiment.daos.MediumDao;
+import td1.jeanico.patiment.metier.modeles.consultations.Consultation;
 
 /**
  * Scénarios de tests pour les consultations
@@ -23,7 +23,7 @@ public class ConsultationScenario {
     private static ClientService clientService;
     private static ConsultationService consultationService;
     private static MediumService mediumService;
-    private static MediumDao mediumDao;
+    
 
     public static void lancer() {
         System.out.println("\n========== SCÉNARIOS DE CONSULTATION ==========");
@@ -31,9 +31,9 @@ public class ConsultationScenario {
         clientService = new ClientService();
         consultationService = new ConsultationService();
         mediumService = new MediumService();
-        mediumDao = new MediumDao();
+        
 
-        scenarioDemandeConsultationValide();
+        scenarioDemandeConsultationValideEtRedemande();
         scenarioDemandeConsultationClientNull();
         scenarioDemandeConsultationMediumNull();
         scenarioDemandeConsultationClientEtMediumNull();
@@ -46,7 +46,16 @@ public class ConsultationScenario {
      * Préparation : crée un client et un medium pour les tests
      */
     private static Client preparerClient() {
-        Adresse adresse = new Adresse("30", "Rue du Commerce", "75003", "75", "Paris");
+        // Si le client existe déjà en base (par email), le récupérer
+        Client probe = new Client();
+        probe.setMail("isabelle.martin@email.com");
+        Client existant = clientService.consulterProfilClient(probe);
+        if (existant != null) {
+            return existant;
+        }
+
+        // Adresse utilisée dans d'autres scénarios (connue pour être valide)
+        Adresse adresse = new Adresse("20", "Rue de la Paix", "75002", "75", "Paris");
         Client client = new Client(
             "Martin",
             "Isabelle",
@@ -57,20 +66,22 @@ public class ConsultationScenario {
             adresse,
             LocalDate.of(1992, 8, 10)
         );
-        
+
         boolean inscriptionReussie = clientService.inscrire(client);
         if (!inscriptionReussie) {
             System.out.println("   ⚠️  Impossible de créer le client de test");
             return null;
         }
-        return client;
+        // Recharger le client persisté pour obtenir l'ID et autres champs
+        Client persisted = clientService.consulterProfilClient(client);
+        return persisted == null ? client : persisted;
     }
 
     /**
-     * Test : demande de consultation valide
+     * Test : demande de consultation valide et redemande
      */
-    public static void scenarioDemandeConsultationValide() {
-        System.out.println("\n=> Scénario : Demande de consultation valide");
+    public static void scenarioDemandeConsultationValideEtRedemande() {
+        System.out.println("\n=> Scénario : Demande de consultation valide et redemande");
 
         Client client = preparerClient();
         if (client == null) {
@@ -78,8 +89,8 @@ public class ConsultationScenario {
             return;
         }
 
-        // Récupérer un medium disponible
-        List<Medium> mediums = mediumDao.listerParDenomination();
+        // Récupérer un medium disponible via le service (gère le contexte JPA)
+        List<Medium> mediums = mediumService.listerMediums();
         if (mediums == null || mediums.isEmpty()) {
             System.out.println("   ⚠️  Aucun medium disponible pour le test");
             return;
@@ -89,13 +100,43 @@ public class ConsultationScenario {
         System.out.println("   - Client : " + client.toString());
         System.out.println("   - Medium choisi : " + medium.toString());
 
-        boolean resultat = consultationService.demanderConsultation(client, medium);
+        Consultation resultat = consultationService.demanderConsultation(client, medium);
         
-        if (resultat) {
-            System.out.println("   ✅ SUCCES : Consultation demandée avec succès");
-        } else {
+        if (resultat == null) {
             System.out.println("   ❌ ECHEC : La demande de consultation a échoué");
+            return;
         }
+        
+        if (resultat.getEmploye().isEstDisponible()) {
+            System.out.println("   ❌ ECHEC : L'employé est toujours disponible !");
+            return;
+        }
+        
+        if (resultat.getEmploye().getGenre() != medium.getGenre()) {
+            System.out.println("   ❌ ECHEC : Le genre de l'employé != genre du medium !");
+            return;
+        }
+        
+        System.out.println("   ✅ SUCCES : Consultation demandée avec succès");
+        System.out.println("   Un message de succès doit apparaitre dans les logs plus haut.");
+        
+        resultat = consultationService.demanderConsultation(client, medium);
+        
+        if (resultat == null) {
+            System.out.println("   ✅ SUCCES : Consultation (re)demandée a échoué");
+        } else {
+            System.out.println("   ❌ ECHEC : La 2ème demande de consultation a fonctionné");
+        }
+    }
+    
+    /**
+     * Test : demande de consultation valide mais pas de dispo
+     */
+    public static void scenarioDemandeConsultationValidePasDispo() {
+        System.out.println("\n=> Scénario : Demande de consultation valide mais pas de dispo");
+        
+        // TODO
+        
     }
 
     /**
@@ -104,16 +145,16 @@ public class ConsultationScenario {
     public static void scenarioDemandeConsultationClientNull() {
         System.out.println("\n=> Scénario : Demande de consultation avec client null");
 
-        List<Medium> mediums = mediumDao.listerParDenomination();
+        List<Medium> mediums = mediumService.listerMediums();
         if (mediums == null || mediums.isEmpty()) {
             System.out.println("   ⚠️  Aucun medium disponible pour le test");
             return;
         }
 
         Medium medium = mediums.get(0);
-        boolean resultat = consultationService.demanderConsultation(null, medium);
+        Consultation resultat = consultationService.demanderConsultation(null, medium);
         
-        if (!resultat) {
+        if (resultat == null) {
             System.out.println("   ✅ SUCCES : La demande avec client null a correctement échoué");
         } else {
             System.out.println("   ❌ ECHEC : La demande avec client null devrait échouer");
@@ -132,9 +173,9 @@ public class ConsultationScenario {
             return;
         }
 
-        boolean resultat = consultationService.demanderConsultation(client, null);
+        Consultation resultat = consultationService.demanderConsultation(client, null);
         
-        if (!resultat) {
+        if (resultat == null) {
             System.out.println("   ✅ SUCCES : La demande avec medium null a correctement échoué");
         } else {
             System.out.println("   ❌ ECHEC : La demande avec medium null devrait échouer");
@@ -147,9 +188,9 @@ public class ConsultationScenario {
     public static void scenarioDemandeConsultationClientEtMediumNull() {
         System.out.println("\n=> Scénario : Demande de consultation avec client et medium null");
 
-        boolean resultat = consultationService.demanderConsultation(null, null);
+        Consultation resultat = consultationService.demanderConsultation(null, null);
         
-        if (!resultat) {
+        if (resultat == null) {
             System.out.println("   ✅ SUCCES : La demande avec arguments null a correctement échoué");
         } else {
             System.out.println("   ❌ ECHEC : La demande avec arguments null devrait échouer");
@@ -161,5 +202,22 @@ public class ConsultationScenario {
      */
     public static void scenarioListeConsultations() {
         System.out.println("\n=> Scénario : Affichage de la liste des consultations");
+        // Tenter de lister l'historique d'un client de test
+        Client client = preparerClient();
+        if (client == null) {
+            System.out.println("   ⚠️  Impossible de préparer un client pour l'affichage des consultations");
+            return;
+        }
+
+        var consultations = consultationService.consulterHistoriqueConsultations(client);
+        if (consultations == null || consultations.isEmpty()) {
+            System.out.println("   ⚠️  Aucune consultation trouvée pour le client " + client.getPrenom() + " " + client.getNom());
+            return;
+        }
+
+        System.out.println("   ✅ " + consultations.size() + " consultation(s) trouvée(s) pour " + client.getPrenom() + " " + client.getNom());
+        for (Consultation c : consultations) {
+            System.out.println("      - " + c.getDate() + " | Medium=" + c.getMedium().getDenomination() + " | Employe=" + (c.getEmploye() == null ? "-" : c.getEmploye().getPrenom() + " " + c.getEmploye().getNom()));
+        }
     }
 }

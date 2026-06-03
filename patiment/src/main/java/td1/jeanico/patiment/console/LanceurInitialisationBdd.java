@@ -178,10 +178,8 @@ public class LanceurInitialisationBdd extends SupportPersistance {
      * Crée 5000 clients
      */
     private void creerClients(ClientDao clientDao) {
-        clientDao.creer(new Client("Doe", "Alice", "alice.doe@email.com", "secret123", "0612345678", Genre.FEMME, new Adresse("20", "Rue de la Paix", "75002", "75", "Paris"), LocalDate.of(1998, 6, 18)));
-        
         Random random = new Random(SEED);
-        int totalClients = 4999;
+        int totalClients = 5000;
         
         for (int i = 0; i < totalClients; i++) {
             String nom = NOMS[random.nextInt(NOMS.length)];

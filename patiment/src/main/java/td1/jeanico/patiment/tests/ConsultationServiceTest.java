@@ -80,9 +80,9 @@ public class ConsultationServiceTest {
 
         if (medium != null) {
             assurerEmployeCompatibleDisponible(medium);
-            boolean resultat = consultationService.demanderConsultation(null, medium);
+            Consultation resultat = consultationService.demanderConsultation(null, medium);
 
-            verifier("retourne false si client null", !resultat);
+            verifier("retourne false si client null", resultat == null);
         }
     }
 
@@ -96,9 +96,9 @@ public class ConsultationServiceTest {
         verifier("prerequis : client initialise retrouve", client != null);
 
         if (client != null) {
-            boolean resultat = consultationService.demanderConsultation(client, null);
+            Consultation resultat = consultationService.demanderConsultation(client, null);
 
-            verifier("retourne false si medium null", !resultat);
+            verifier("retourne false si medium null", resultat == null);
         }
     }
 
@@ -116,12 +116,12 @@ public class ConsultationServiceTest {
 
         if (client != null && medium != null) {
             assurerEmployeCompatibleDisponible(medium);
-            boolean resultat = consultationService.demanderConsultation(client, medium);
+            Consultation resultat = consultationService.demanderConsultation(client, medium);
             List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
             Consultation creee = (historique == null || historique.isEmpty()) ? null : historique.get(0);
             Employe employeAffecte = creee == null ? null : persistanceHelper.lecture(() -> employeDao.trouverParId(creee.getEmploye().getId()));
 
-            verifier("retourne true", resultat);
+            verifier("retourne pas null", resultat != null);
             verifier("consultation persistee", creee != null);
             verifier("consultation active a la creation", creee != null && !creee.isEstTermine());
             verifier("medium associe correct", creee != null && creee.getMedium() != null
@@ -176,11 +176,11 @@ public class ConsultationServiceTest {
 
         if (client != null && medium != null) {
             assurerEmployeCompatibleDisponible(medium);
-            boolean demande = consultationService.demanderConsultation(client, medium);
+            Consultation demande = consultationService.demanderConsultation(client, medium);
 
             List<Consultation> resultat = consultationService.consulterHistoriqueConsultations(client);
 
-            verifier("demande prealable reussie", demande);
+            verifier("demande prealable reussie", demande != null);
             verifier("historique non nul", resultat != null);
             verifier("historique contient au moins une consultation", resultat != null && !resultat.isEmpty());
         }
@@ -251,12 +251,12 @@ public class ConsultationServiceTest {
 
         if (client != null && medium != null) {
             assurerEmployeCompatibleDisponible(medium);
-            boolean demande = consultationService.demanderConsultation(client, medium);
+            Consultation demande = consultationService.demanderConsultation(client, medium);
 
             List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
-            boolean prerequis = demande && historique != null && !historique.isEmpty();
+            boolean prerequis = demande != null && historique != null && !historique.isEmpty();
 
-            verifier("demande prealable reussie", demande);
+            verifier("demande prealable reussie", demande != null);
             verifier("consultation trouvee dans historique", prerequis);
 
             if (prerequis) {
@@ -338,13 +338,13 @@ public class ConsultationServiceTest {
             assurerEmployeCompatibleDisponible(medium);
             List<Consultation> historiqueAvant = consultationService.consulterHistoriqueConsultations(client);
             Set<Long> idsAvant = extraireIdsConsultations(historiqueAvant);
-            boolean demande = consultationService.demanderConsultation(client, medium);
+            Consultation demande = consultationService.demanderConsultation(client, medium);
 
             List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
             Consultation consultation = trouverConsultationCreeePendantLeTest(historique, idsAvant, medium);
-            boolean prerequis = demande && consultation != null;
+            boolean prerequis = demande != null && consultation != null;
 
-            verifier("demande prealable reussie", demande);
+            verifier("demande prealable reussie", demande != null);
             verifier("consultation creee pendant le test retrouvee", prerequis);
 
             if (prerequis) {
@@ -442,12 +442,12 @@ public class ConsultationServiceTest {
 
         if (client != null && medium != null) {
             assurerEmployeCompatibleDisponible(medium);
-            boolean demande = consultationService.demanderConsultation(client, medium);
+            Consultation demande = consultationService.demanderConsultation(client, medium);
 
             List<Consultation> historique = consultationService.consulterHistoriqueConsultations(client);
-            boolean prerequis = demande && historique != null && !historique.isEmpty();
+            boolean prerequis = demande != null && historique != null && !historique.isEmpty();
 
-            verifier("demande prealable reussie", demande);
+            verifier("demande prealable reussie", demande != null);
             verifier("consultation trouvee dans historique", prerequis);
 
             if (prerequis) {

@@ -301,8 +301,8 @@ public class LanceurAppConsole {
         }
         int index = Saisie.lireInteger("👉 Votre choix :", choix);
         Medium choisi = mediums.get(index - 1);
-        boolean ok = CONSULTATION_SERVICE.demanderConsultation(client, choisi);
-        if (ok) {
+        Consultation result = CONSULTATION_SERVICE.demanderConsultation(client, choisi);
+        if (result != null) {
             System.out.println("✅ Consultation demandee. Un de nos employes incarnera bientot " + choisi.getDenomination() + ".");
         } else {
             System.out.println("❌ Aucun employe disponible pour le moment, reessayez plus tard.");

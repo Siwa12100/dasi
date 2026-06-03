@@ -47,7 +47,7 @@ public class StatistiqueScenario {
     public static void scenarioNombreClients() {
         System.out.println("\n=> Scénario : Nombre total de clients");
 
-        
+        // TODO
     }
 
     /**
@@ -56,7 +56,7 @@ public class StatistiqueScenario {
     public static void scenarioNombreConsultations() {
         System.out.println("\n=> Scénario : Nombre total de consultations");
 
-        
+        // TODO
     }
 
     /**
@@ -65,7 +65,7 @@ public class StatistiqueScenario {
     public static void scenarioMediumPopulaire() {
         System.out.println("\n=> Scénario : Medium le plus populaire (le plus consulté)");
 
-        
+        // TODO
     }
 
     /**
@@ -74,7 +74,7 @@ public class StatistiqueScenario {
     public static void scenarioStatistiquesConsultants() {
         System.out.println("\n=> Scénario : Statistiques par consultant (employé)");
 
-        
+        // TODO
     }
 
     /**
@@ -83,6 +83,6 @@ public class StatistiqueScenario {
     public static void scenarioPredictionsMoyennes() {
         System.out.println("\n=> Scénario : Statistiques sur les prédictions");
 
-        
+        // TODO
     }
 }
