@@ -18,9 +18,7 @@ public class ConsultationService extends SupportPersistance {
     private final ConsultationDao consultationDao;
     private final EmployeDao employeDao;
 
-    /**
-     * Constructeur par défaut.
-     */
+    
     public ConsultationService() {
         this(new ConsultationDao(), new EmployeDao());
     }

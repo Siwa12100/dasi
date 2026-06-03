@@ -92,20 +92,6 @@ public class ClientService extends SupportPersistance {
     }
 
     /**
-     * Authentifie un client par couple mail/mot de passe.
-     * Retourne null si les entrées sont vides ou inconnues.
-     * @param mail
-     * @param motDePasse
-     * @return 
-     */
-    public Client authentifier(String mail, String motDePasse) {
-        if (estVide(mail) || estVide(motDePasse)) {
-            return null;
-        }
-        return executerLecture(() -> clientDao.trouverParMailEtMotDePasse(mail, motDePasse));
-    }
-
-    /**
      * Retourne le profil astral d'un client.
      * Si absent en base, il est récupéré via AstroNet puis sauvegardé.
      * @param client

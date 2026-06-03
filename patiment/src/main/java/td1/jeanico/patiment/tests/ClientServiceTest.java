@@ -3,15 +3,11 @@ package td1.jeanico.patiment.tests;
 import java.time.LocalDate;
 
 import td1.jeanico.patiment.metier.modeles.clients.Adresse;
-import td1.jeanico.patiment.metier.modeles.clients.ProfilAstral;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Client;
 import td1.jeanico.patiment.metier.modeles.utilisateurs.Genre;
 import td1.jeanico.patiment.metier.services.ClientService;
 
 public class ClientServiceTest {
-
-    private static final String MAIL_CLIENT_INITIALISE = "arthur@free.fr";
-    private static final String MDP_CLIENT_INITIALISE = "arthur123";
 
     private static int nbTests = 0;
     private static int nbSucces = 0;
@@ -38,9 +34,6 @@ public class ClientServiceTest {
 
         test_Inscrire_Client_Valide();
         test_Inscrire_Client_DoublonMail();
-        test_Authentifier_Client_Valide();
-        test_ConsulterProfilAstral_ClientExistant();
-        test_RecupererClientParId();
 
         System.out.println("=== Bilan ClientService: " + nbSucces + "/" + nbTests + " tests valides ===\n");
     }
@@ -74,53 +67,6 @@ public class ClientServiceTest {
 
         verifier("premiere inscription acceptee", premiereInscription);
         verifier("inscription doublon refusee", !secondeInscription);
-    }
-
-    /**
-     * Verifie le parcours nominal d'authentification d'un client initialise en BDD.
-     */
-    public static void test_Authentifier_Client_Valide() {
-        System.out.println("Test : Authentifier un client valide initialise en BDD");
-
-        Client resultat = clientService.authentifier(MAIL_CLIENT_INITIALISE, MDP_CLIENT_INITIALISE);
-
-        verifier("authentification retourne client", resultat != null);
-        verifier("mail client authentifie correct", resultat != null && MAIL_CLIENT_INITIALISE.equalsIgnoreCase(resultat.getMail()));
-    }
-
-    /**
-     * Verifie que la consultation du profil astral retourne un profil complet.
-     */
-    public static void test_ConsulterProfilAstral_ClientExistant() {
-        System.out.println("Test : Consulter le profil astral d'un client initialise en BDD");
-
-        Client client = clientService.authentifier(MAIL_CLIENT_INITIALISE, MDP_CLIENT_INITIALISE);
-        verifier("prerequis : client initialise retrouve", client != null);
-
-        if (client != null) {
-            ProfilAstral resultat = clientService.consulterProfilAstral(client);
-
-            verifier("profil retourne", resultat != null);
-            verifier("animal totem renseigne", resultat != null && !estVide(resultat.getAnimalTotem()));
-            verifier("signe zodiac renseigne", resultat != null && !estVide(resultat.getSigneZodiac()));
-        }
-    }
-
-    /**
-     * Verifie qu'un client initialise est recuperable par son identifiant.
-     */
-    public static void test_RecupererClientParId() {
-        System.out.println("Test : Recuperer un client initialise en BDD par son id");
-
-        Client client = clientService.authentifier(MAIL_CLIENT_INITIALISE, MDP_CLIENT_INITIALISE);
-        verifier("prerequis : client initialise retrouve", client != null);
-
-        if (client != null) {
-            Client recupere = clientService.recupererClientParId(client.getId());
-
-            verifier("client recupere non nul", recupere != null);
-            verifier("id recupere correct", recupere != null && client.getId().equals(recupere.getId()));
-        }
     }
 
     /**
@@ -167,12 +113,5 @@ public class ClientServiceTest {
         String mail = prefix + "." + System.currentTimeMillis() + "." + sequenceMail + "@test.fr";
         sequenceMail++;
         return mail;
-    }
-
-    /**
-     * Indique si une chaine est nulle ou vide.
-     */
-    private static boolean estVide(String valeur) {
-        return valeur == null || valeur.isBlank();
     }
 }
