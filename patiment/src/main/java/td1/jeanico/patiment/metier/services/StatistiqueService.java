@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.stream.Collectors;
 import td1.jeanico.patiment.daos.ClientDao;
 import td1.jeanico.patiment.daos.ConsultationDao;
 import td1.jeanico.patiment.daos.EmployeDao;
