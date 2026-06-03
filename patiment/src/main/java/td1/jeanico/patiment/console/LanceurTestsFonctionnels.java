@@ -1,5 +1,6 @@
 package td1.jeanico.patiment.console;
 
+import td1.jeanico.patiment.daos.JpaUtil;
 import td1.jeanico.patiment.tests.AuthServiceTest;
 import td1.jeanico.patiment.tests.AdresseChercheurTest;
 import td1.jeanico.patiment.tests.ClientServiceTest;
@@ -9,9 +10,17 @@ import td1.jeanico.patiment.tests.MediumServiceTest;
 import td1.jeanico.patiment.tests.PredictionServiceTest;
 import td1.jeanico.patiment.tests.StatistiqueServiceTest;
 
-public class LanceurTestsFonctionnels {
+public class LanceurTestsFonctionnels {   
+    public static void main(String[] args) {
+        JpaUtil.creerFabriquePersistance();
+        LanceurInitialisationBdd bdInitialiseur = new LanceurInitialisationBdd();
+        bdInitialiseur.lancementInitialisationBdd();
+        
+        lancerTestsFonctionnels();
+        
+        JpaUtil.fermerFabriquePersistance();
+    }
     
-
     public static void lancerTestsFonctionnels() {
         System.out.println("Lancement des tests fonctionnels...");
         

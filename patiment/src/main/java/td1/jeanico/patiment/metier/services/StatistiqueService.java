@@ -4,12 +4,12 @@ import td1.jeanico.patiment.outils.SupportPersistance;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.stream.Collectors;
 import td1.jeanico.patiment.daos.ClientDao;
 import td1.jeanico.patiment.daos.ConsultationDao;
 import td1.jeanico.patiment.daos.EmployeDao;
@@ -34,7 +34,7 @@ public class StatistiqueService extends SupportPersistance {
     }
 
     /**
-     * Constructeur injectable.
+     * Constructeur
      * @param consultationDao
      * @param mediumDao
      * @param employeDao
@@ -53,7 +53,7 @@ public class StatistiqueService extends SupportPersistance {
      */
     public Map<Medium, Integer> listerNombreConsultationsParMedium() {
         return executerLecture(() -> {
-            Map<Medium, Integer> resultat = new LinkedHashMap<>();
+            Map<Medium, Integer> resultat = new HashMap<>();
             for (Medium medium : mediumDao.listerParDenomination()) {
                 resultat.put(medium, 0);
             }
@@ -70,17 +70,17 @@ public class StatistiqueService extends SupportPersistance {
      */
     public Map<Employe, Integer> listerRepartitionClientParEmploye() {
         return executerLecture(() -> {
-            Map<Employe, Set<Long>> clientsDistinctsParEmploye = new LinkedHashMap<>();
+            Map<Employe, Set<Long>> clientsDistinctsParEmploye = new HashMap<>();
             for (Employe employe : employeDao.listerParNomPrenom()) {
-                clientsDistinctsParEmploye.put(employe, new LinkedHashSet<>());
+                clientsDistinctsParEmploye.put(employe, new HashSet<>());
             }
             for (Consultation consultation : consultationDao.listerParDateDesc()) {
-                clientsDistinctsParEmploye
-                        .computeIfAbsent(consultation.getEmploye(), ignored -> new LinkedHashSet<>())
-                        .add(consultation.getClient().getId());
+                Set<Long> set = clientsDistinctsParEmploye.get(consultation.getEmploye());
+                set.add(consultation.getClient().getId());
+                clientsDistinctsParEmploye.put(consultation.getEmploye(), set);
             }
 
-            Map<Employe, Integer> resultat = new LinkedHashMap<>();
+            Map<Employe, Integer> resultat = new HashMap<>();
             for (Map.Entry<Employe, Set<Long>> entry : clientsDistinctsParEmploye.entrySet()) {
                 resultat.put(entry.getKey(), entry.getValue().size());
             }
@@ -91,29 +91,30 @@ public class StatistiqueService extends SupportPersistance {
     /**
      * Retourne les N médiums les plus demandés, triés par volume décroissant.
      * @param nbMediums
-     * @return 
+     * @return
      */
     public List<Map<Medium, Integer>> listerMediumsPopulaire(int nbMediums) {
+        // Garde-fou: une demande nulle ou négative renvoie une liste vide.
         if (nbMediums <= 0) {
             return List.of();
         }
-        Map<Medium, Integer> compteurs = listerNombreConsultationsParMedium();
-        return executerLecture(() -> {
-            List<Map.Entry<Medium, Integer>> entrees = new ArrayList<>(compteurs.entrySet());
-            // Tri secondaire alpha pour stabiliser les égalités.
-            entrees.sort(Comparator
-                    .comparing((Map.Entry<Medium, Integer> entry) -> entry.getValue(), Comparator.reverseOrder())
-                    .thenComparing(entry -> securiser(entry.getKey().getDenomination()), String.CASE_INSENSITIVE_ORDER));
+        // On trie d'abord par nombre de consultations (descendant),
+        // puis par dénomination pour obtenir un ordre déterministe en cas d'égalité.
+        Comparator<Map.Entry<Medium, Integer>> comparateur = Comparator
+                .comparing((Map.Entry<Medium, Integer> entry) -> entry.getValue(), Comparator.reverseOrder())
+                .thenComparing(entry -> securiser(entry.getKey().getDenomination()), String.CASE_INSENSITIVE_ORDER);
 
-            List<Map<Medium, Integer>> resultat = new ArrayList<>();
-            for (int index = 0; index < Math.min(nbMediums, entrees.size()); index++) {
-                Map.Entry<Medium, Integer> entry = entrees.get(index);
-                Map<Medium, Integer> ligne = new LinkedHashMap<>();
-                ligne.put(entry.getKey(), entry.getValue());
-                resultat.add(ligne);
-            }
-            return resultat;
-        });
+        // Pipeline: tri -> limite aux N premiers -> format attendu (une map par ligne).
+        return listerNombreConsultationsParMedium().entrySet().stream()
+                .sorted(comparateur)
+                .limit(nbMediums)
+                .map(entry -> {
+                    // Le format de sortie historique est une liste de maps unitaires.
+                    Map<Medium, Integer> ligne = new HashMap<>();
+                    ligne.put(entry.getKey(), entry.getValue());
+                    return ligne;
+                })
+                .collect(Collectors.toList());
     }
     
     /**
@@ -122,13 +123,13 @@ public class StatistiqueService extends SupportPersistance {
      */
     public Map<String, Integer> listerRepartitionGeographiqueClients() {
         return executerLecture(() -> {
-            Map<String, Integer> resultat = new TreeMap<>();
+            Map<String, Integer> resultat = new HashMap<>();
             for (Client client : clientDao.listerParNomPrenom()) {
                 String codeDepartement = client.getAdresse() == null ? null : client.getAdresse().getCodeDepartement();
                 String cle = (codeDepartement == null || codeDepartement.isBlank()) ? "INCONNU" : codeDepartement;
                 resultat.merge(cle, 1, Integer::sum);
             }
-            return new LinkedHashMap<>(resultat);
+            return new HashMap<>(resultat);
         });
     }
 

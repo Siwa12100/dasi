@@ -1,5 +1,6 @@
 package td1.jeanico.patiment.console;
 
+import td1.jeanico.patiment.daos.JpaUtil;
 import td1.jeanico.patiment.scenarios.InscriptionScenario;
 import td1.jeanico.patiment.scenarios.ConnexionScenario;
 import td1.jeanico.patiment.scenarios.ConsultationScenario;
@@ -12,7 +13,13 @@ import td1.jeanico.patiment.scenarios.StatistiqueScenario;
 public class LanceurScenarios {
     
     public static void main(String[] args) {
+        JpaUtil.creerFabriquePersistance();
+        LanceurInitialisationBdd lanceur = new LanceurInitialisationBdd();
+        lanceur.lancementInitialisationBdd();
+        
         lancerScenarios();
+        
+        JpaUtil.fermerFabriquePersistance();
     }
     
     /**
