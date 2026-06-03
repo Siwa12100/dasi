@@ -68,7 +68,7 @@ public class StatistiqueScenario {
             totalConsultations += valeur == null ? 0 : valeur;
         }
 
-        System.out.println("   ✅ Nombre total de consultations : " + totalConsultations);
+        System.out.println("   ✅ Répartition des " + totalConsultations + " consultations par medium : ");
         for (Map.Entry<Medium, Integer> entry : consultationsParMedium.entrySet()) {
             System.out.println("      - " + entry.getKey().getDenomination() + " : " + entry.getValue());
         }
